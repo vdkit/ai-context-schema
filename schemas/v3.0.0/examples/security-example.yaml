@@ -2,7 +2,9 @@
 id: "security-practices"
 title: "Security Best Practices"
 description: "Comprehensive security guidelines for secure application development and deployment"
+schemaVersion: "3.0"
 version: "1.1.0"
+kind: "skill"
 lastUpdated: "2024-01-20"
 category: "core"
 subcategory: "security"
@@ -160,7 +162,7 @@ const processFile = (filename: string) => {
   if (!/^[a-zA-Z0-9._-]+$/.test(filename)) {
     throw new Error('Invalid filename');
   }
-  
+
   // Use parameterized execution
   execFile('convert', [filename, 'output.jpg']);
 };
@@ -180,7 +182,7 @@ class AuthService {
   async hashPassword(password: string): Promise<string> {
     // Validate password strength
     this.validatePasswordStrength(password);
-    
+
     // Hash with secure salt rounds
     return bcrypt.hash(password, this.SALT_ROUNDS);
   }
@@ -193,12 +195,12 @@ class AuthService {
     if (password.length < this.MIN_PASSWORD_LENGTH) {
       throw new Error('Password must be at least 12 characters');
     }
-    
+
     const hasUppercase = /[A-Z]/.test(password);
     const hasLowercase = /[a-z]/.test(password);
     const hasNumbers = /\d/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    
+
     if (!hasUppercase || !hasLowercase || !hasNumbers || !hasSpecialChar) {
       throw new Error('Password must contain uppercase, lowercase, numbers, and special characters');
     }
@@ -222,7 +224,7 @@ class JWTService {
     const accessToken = jwt.sign(
       payload,
       process.env.JWT_ACCESS_SECRET!,
-      { 
+      {
         expiresIn: this.ACCESS_TOKEN_EXPIRY,
         issuer: 'your-app',
         audience: 'your-app-users'
@@ -232,7 +234,7 @@ class JWTService {
     const refreshToken = jwt.sign(
       { userId: payload.userId },
       process.env.JWT_REFRESH_SECRET!,
-      { 
+      {
         expiresIn: this.REFRESH_TOKEN_EXPIRY,
         issuer: 'your-app'
       }
@@ -403,12 +405,12 @@ class EncryptionService {
   encrypt(text: string, key: Buffer): { encrypted: string; iv: string; tag: string } {
     const iv = crypto.randomBytes(16);
     const cipher = crypto.createCipher(this.algorithm, key, iv);
-    
+
     let encrypted = cipher.update(text, 'utf8', 'hex');
     encrypted += cipher.final('hex');
-    
+
     const tag = cipher.getAuthTag();
-    
+
     return {
       encrypted,
       iv: iv.toString('hex'),
@@ -419,10 +421,10 @@ class EncryptionService {
   decrypt(encryptedData: { encrypted: string; iv: string; tag: string }, key: Buffer): string {
     const decipher = crypto.createDecipher(this.algorithm, key, Buffer.from(encryptedData.iv, 'hex'));
     decipher.setAuthTag(Buffer.from(encryptedData.tag, 'hex'));
-    
+
     let decrypted = decipher.update(encryptedData.encrypted, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
-    
+
     return decrypted;
   }
 
@@ -580,23 +582,23 @@ app.use(helmet({
       frameSrc: ["'none'"],
     },
   },
-  
+
   // HTTP Strict Transport Security
   hsts: {
     maxAge: 31536000, // 1 year
     includeSubDomains: true,
     preload: true
   },
-  
+
   // X-Frame-Options
   frameguard: { action: 'deny' },
-  
+
   // X-Content-Type-Options
   noSniff: true,
-  
+
   // X-XSS-Protection (legacy browsers)
   xssFilter: true,
-  
+
   // Referrer Policy
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
 }));
@@ -658,11 +660,11 @@ class AccountSecurityService {
   async recordFailedAttempt(email: string): Promise<void> {
     const key = `failed_attempts:${email}`;
     const attempts = await redis.incr(key);
-    
+
     if (attempts === 1) {
       await redis.expire(key, 900); // 15 minutes
     }
-    
+
     if (attempts >= this.MAX_FAILED_ATTEMPTS) {
       await this.lockAccount(email);
     }
@@ -677,7 +679,7 @@ class AccountSecurityService {
   private async lockAccount(email: string): Promise<void> {
     const lockKey = `locked:${email}`;
     await redis.setex(lockKey, this.LOCKOUT_DURATION / 1000, 'true');
-    
+
     // Send security notification
     await this.sendSecurityAlert(email);
   }
@@ -748,7 +750,7 @@ class APIKeyService {
   async generateAPIKey(userId: string, permissions: Permission[]): Promise<string> {
     const apiKey = crypto.randomBytes(32).toString('hex');
     const hashedKey = await bcrypt.hash(apiKey, 10);
-    
+
     await this.storeAPIKey({
       hashedKey,
       userId,
@@ -757,13 +759,13 @@ class APIKeyService {
       lastUsed: null,
       isActive: true
     });
-    
+
     return apiKey;
   }
 
   async validateAPIKey(apiKey: string): Promise<{ userId: string; permissions: Permission[] } | null> {
     const storedKeys = await this.getActiveAPIKeys();
-    
+
     for (const key of storedKeys) {
       const isValid = await bcrypt.compare(apiKey, key.hashedKey);
       if (isValid) {
@@ -774,7 +776,7 @@ class APIKeyService {
         };
       }
     }
-    
+
     return null;
   }
 }
@@ -782,16 +784,16 @@ class APIKeyService {
 // API Key middleware
 const authenticateAPIKey = async (req: Request, res: Response, next: NextFunction) => {
   const apiKey = req.header('X-API-Key');
-  
+
   if (!apiKey) {
     return res.status(401).json({ error: 'API key required' });
   }
-  
+
   const keyData = await apiKeyService.validateAPIKey(apiKey);
   if (!keyData) {
     return res.status(401).json({ error: 'Invalid API key' });
   }
-  
+
   req.user = { id: keyData.userId, permissions: keyData.permissions };
   next();
 };
@@ -809,22 +811,22 @@ dotenv.config();
 const envSchema = Joi.object({
   NODE_ENV: Joi.string().valid('development', 'production', 'test').default('development'),
   PORT: Joi.number().port().default(3000),
-  
+
   // Database
   DATABASE_URL: Joi.string().uri().required(),
   DATABASE_SSL: Joi.boolean().default(true),
-  
+
   // JWT
   JWT_ACCESS_SECRET: Joi.string().min(32).required(),
   JWT_REFRESH_SECRET: Joi.string().min(32).required(),
-  
+
   // Encryption
   ENCRYPTION_KEY: Joi.string().base64().required(),
-  
+
   // External Services
   REDIS_URL: Joi.string().uri().required(),
   EMAIL_SERVICE_API_KEY: Joi.string().required(),
-  
+
   // Security
   ALLOWED_ORIGINS: Joi.string().required(),
   RATE_LIMIT_WINDOW: Joi.number().positive().default(900000), // 15 minutes

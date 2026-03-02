@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/ai-context-schema.svg)](https://badge.fury.io/js/ai-context-schema)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D22.0.0-brightgreen.svg)](https://nodejs.org/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16788626.svg)](https://doi.org/10.5281/zenodo.16788626)
 
 **Universal AI Context Schema: A New Interoperability Standard for AI Development Tools**
@@ -27,6 +27,24 @@ AI Context Schema provides a universal format that enables developers to define 
 3. **Structured Validation**: JSON Schema validation prevents configuration errors
 4. **Relationship Awareness**: Schemas can depend on, extend, and conflict with each other
 
+### Ecosystem Operating Contract (Normative)
+
+All ecosystem implementation and documentation should follow this order:
+
+1. `ai-context-schema` (canonical contract)
+2. `VDK-Blueprints` (curated canonical inventory)
+3. `VDK-CLI` (runtime retrieval, adaptation, deployment)
+4. `VDK-Hub` (distribution and discovery UX/API)
+5. `VDK-Wiki` (documentation surface)
+
+`VDK-CLI` is the execution core. Runtime semantics for blueprint search, scoring, adaptation outcomes, and deployment are defined there and mirrored downstream by Hub and Wiki.
+
+Curated library policy:
+
+- Default retrieval blends `L0-L3` (generic to specific)
+- `L4` provenance variants are excluded by default and only included on explicit request
+- Deployment should be deterministic for a selected artifact (`vdk deploy <blueprint-id>`)
+
 ## How It Works
 
 Context schemas are YAML files with frontmatter metadata and Markdown content:
@@ -36,6 +54,8 @@ Context schemas are YAML files with frontmatter metadata and Markdown content:
 id: "react-patterns"
 title: "React Development Guidelines"
 description: "Modern React patterns with TypeScript and hooks"
+schemaVersion: "3.0"
+kind: "skill"
 version: "1.0.0"
 category: "technology"
 platforms:
@@ -109,9 +129,30 @@ ai-context-schema check-compatibility schemas/
 - `id`: Unique identifier (kebab-case)
 - `title`: Human-readable name
 - `description`: Purpose description (10-500 chars)
+- `schemaVersion`: Schema contract version (for example `3.0`)
+- `kind`: Canonical blueprint kind (for example `skill`, `command`, `workflow`, `agent`)
 - `version`: Semantic version
-- `category`: Primary categorization
 - `platforms`: Platform compatibility specification
+
+Canonical `kind` values:
+
+- `project-memory`
+- `conditional-rule`
+- `skill`
+- `command`
+- `workflow`
+- `agent`
+- `hook`
+- `mcp-integration`
+- `plugin-distribution`
+
+`category` remains supported as optional editorial grouping.
+
+Optional retrieval metadata used by curated inventories:
+
+- `specificityLayer`: `L0`..`L4`
+- `equivalenceOutcome`: `lossless` | `lossy` | `unsupported`
+- `curation.status`: `curated` | `experimental` | `community` | `deprecated`
 
 ### Platform Configuration
 
@@ -120,6 +161,7 @@ Each platform has specific configuration options. Here are examples for key plat
 #### AI Assistants
 
 **Claude Code**
+
 ```yaml
 claude-code:
   compatible: true
@@ -131,6 +173,7 @@ claude-code:
 ```
 
 **Claude Desktop**
+
 ```yaml
 claude-desktop:
   compatible: true
@@ -140,17 +183,19 @@ claude-desktop:
 ```
 
 **Generic AI** (Universal format)
+
 ```yaml
 generic-ai:
   compatible: true
-  configPath: ".ai/"
-  rulesPath: ".ai/rules/"
+  configPath: '.ai/'
+  rulesPath: '.ai/rules/'
   priority: 7 # Context priority (1-10)
 ```
 
 #### AI-First Editors
 
 **Cursor**
+
 ```yaml
 cursor:
   compatible: true
@@ -160,6 +205,7 @@ cursor:
 ```
 
 **Windsurf**
+
 ```yaml
 windsurf:
   compatible: true
@@ -171,6 +217,7 @@ windsurf:
 #### Modern Editors
 
 **Zed Editor**
+
 ```yaml
 zed:
   compatible: true
@@ -181,6 +228,7 @@ zed:
 ```
 
 **VS Code Family**
+
 ```yaml
 vscode:
   compatible: true
@@ -193,6 +241,7 @@ vscode:
 #### JetBrains IDEs
 
 **General JetBrains**
+
 ```yaml
 jetbrains:
   compatible: true
@@ -203,6 +252,7 @@ jetbrains:
 ```
 
 **WebStorm**
+
 ```yaml
 webstorm:
   compatible: true
@@ -214,6 +264,7 @@ webstorm:
 #### GitHub Services
 
 **GitHub Copilot**
+
 ```yaml
 github-copilot:
   compatible: true
@@ -288,7 +339,7 @@ globs: ['**/*.tsx']
 
 The specification includes comprehensive validation:
 
-- **JSON Schema validation** against v2.1.0 specification
+- **JSON Schema validation** against v3.0.0 specification
 - **Platform compatibility** checking
 - **Content optimization** for platform limits
 - **Relationship resolution** for dependencies and conflicts
@@ -297,45 +348,45 @@ The specification includes comprehensive validation:
 
 ### AI Assistants & Services
 
-| Platform       | Status  | Configuration Location | Features                    |
-| -------------- | ------- | ---------------------- | --------------------------- |
-| Claude Code    | ✅ Full | `.claude/`             | Memory files, commands, MCP |
-| Claude Desktop | ✅ Full | `.claude-desktop/`     | Rules, MCP integration      |
-| GitHub Copilot | ✅ Full | `.github/copilot/`     | Review integration          |
-| Generic AI     | ✅ Full | `.ai/`                 | Universal format            |
-| OpenAI         | ⚠️ Limited | `.openai/`           | Deprecated support          |
+| Platform       | Status     | Configuration Location | Features                    |
+| -------------- | ---------- | ---------------------- | --------------------------- |
+| Claude Code    | ✅ Full    | `.claude/`             | Memory files, commands, MCP |
+| Claude Desktop | ✅ Full    | `.claude-desktop/`     | Rules, MCP integration      |
+| GitHub Copilot | ✅ Full    | `.github/copilot/`     | Review integration          |
+| Generic AI     | ✅ Full    | `.ai/`                 | Universal format            |
+| OpenAI         | ⚠️ Limited | `.openai/`             | Deprecated support          |
 
 ### AI-First Editors
 
-| Platform       | Status  | Configuration Location | Features                         |
-| -------------- | ------- | ---------------------- | -------------------------------- |
-| Cursor         | ✅ Full | `.cursor/rules/`       | Auto-attachment, patterns, MCP   |
-| Windsurf       | ✅ Full | `.windsurf/rules/`     | XML format, limits, MCP          |
-| Windsurf Next  | ✅ Full | `.windsurf-next/`      | Enhanced XML format, MCP         |
+| Platform      | Status  | Configuration Location | Features                       |
+| ------------- | ------- | ---------------------- | ------------------------------ |
+| Cursor        | ✅ Full | `.cursor/rules/`       | Auto-attachment, patterns, MCP |
+| Windsurf      | ✅ Full | `.windsurf/rules/`     | XML format, limits, MCP        |
+| Windsurf Next | ✅ Full | `.windsurf-next/`      | Enhanced XML format, MCP       |
 
 ### Code Editors & IDEs
 
-| Platform         | Status  | Configuration Location | Features                         |
-| ---------------- | ------- | ---------------------- | -------------------------------- |
-| VS Code          | ✅ Full | `.vscode/`             | Settings integration, MCP        |
-| VS Code Insiders | ✅ Full | `.vscode-insiders/`    | Settings integration, MCP        |
-| VSCodium         | ✅ Full | `.vscode-oss/`         | Open source VS Code support      |
-| Zed Editor       | ✅ Full | `.zed/`                | AI features, collaborative       |
+| Platform         | Status  | Configuration Location | Features                    |
+| ---------------- | ------- | ---------------------- | --------------------------- |
+| VS Code          | ✅ Full | `.vscode/`             | Settings integration, MCP   |
+| VS Code Insiders | ✅ Full | `.vscode-insiders/`    | Settings integration, MCP   |
+| VSCodium         | ✅ Full | `.vscode-oss/`         | Open source VS Code support |
+| Zed Editor       | ✅ Full | `.zed/`                | AI features, collaborative  |
 
 ### JetBrains IDEs
 
-| Platform       | Status  | Configuration Location | Features                         |
-| -------------- | ------- | ---------------------- | -------------------------------- |
-| IntelliJ IDEA  | ✅ Full | `.idea/`               | Inspections, templates, MCP      |
-| WebStorm       | ✅ Full | `.idea/`               | Node.js, TypeScript integration |
-| PyCharm        | ✅ Full | `.idea/`               | Python interpreter, virtual env  |
-| PHPStorm       | ✅ Full | `.idea/`               | PHP version, Composer integration|
-| RubyMine       | ✅ Full | `.idea/`               | Ruby version, Rails support      |
-| CLion          | ✅ Full | `.idea/`               | CMake, debugger integration      |
-| DataGrip       | ✅ Full | `.idea/`               | Database, SQL dialect support    |
-| GoLand         | ✅ Full | `.idea/`               | Go modules, version support      |
-| Rider          | ✅ Full | `.idea/`               | .NET, Unity integration          |
-| Android Studio | ✅ Full | `.idea/`               | Android SDK, Gradle support      |
+| Platform       | Status  | Configuration Location | Features                          |
+| -------------- | ------- | ---------------------- | --------------------------------- |
+| IntelliJ IDEA  | ✅ Full | `.idea/`               | Inspections, templates, MCP       |
+| WebStorm       | ✅ Full | `.idea/`               | Node.js, TypeScript integration   |
+| PyCharm        | ✅ Full | `.idea/`               | Python interpreter, virtual env   |
+| PHPStorm       | ✅ Full | `.idea/`               | PHP version, Composer integration |
+| RubyMine       | ✅ Full | `.idea/`               | Ruby version, Rails support       |
+| CLion          | ✅ Full | `.idea/`               | CMake, debugger integration       |
+| DataGrip       | ✅ Full | `.idea/`               | Database, SQL dialect support     |
+| GoLand         | ✅ Full | `.idea/`               | Go modules, version support       |
+| Rider          | ✅ Full | `.idea/`               | .NET, Unity integration           |
+| Android Studio | ✅ Full | `.idea/`               | Android SDK, Gradle support       |
 
 **Total Supported Platforms: 20+**
 
@@ -343,10 +394,10 @@ The specification includes comprehensive validation:
 
 The repository includes comprehensive examples:
 
-- [`react-example.yaml`](./schemas/v2.1.0/examples/react-example.yaml) - React development patterns
-- [`api-example.yaml`](./schemas/v2.1.0/examples/api-example.yaml) - REST API development
-- [`security-example.yaml`](./schemas/v2.1.0/examples/security-example.yaml) - Security best practices
-- [`testing-example.yaml`](./schemas/v2.1.0/examples/testing-example.yaml) - Testing strategies
+- [`react-example.yaml`](./schemas/v3.0.0/examples/react-example.yaml) - React development patterns
+- [`api-example.yaml`](./schemas/v3.0.0/examples/api-example.yaml) - REST API development
+- [`security-example.yaml`](./schemas/v3.0.0/examples/security-example.yaml) - Security best practices
+- [`testing-example.yaml`](./schemas/v3.0.0/examples/testing-example.yaml) - Testing strategies
 
 ## Technical Specification
 
@@ -374,6 +425,34 @@ ai-context-schema lint
 # Documentation validation
 ai-context-schema docs:serve
 ```
+
+### Blueprint linting and auto-fix workflow
+
+`ai-context-schema` uses Oxlint with `@vdk/oxlint-plugin-blueprints` to enforce blueprint contract integrity for v3 examples.
+
+```bash
+# Contract lint (Oxlint + custom blueprint rule)
+pnpm run lint
+
+# Preview frontmatter normalization changes
+pnpm run lint:blueprints:dry
+
+# Apply deterministic frontmatter normalization
+pnpm run lint:blueprints:fix
+
+# Full lint pipeline (contract + formatting + markdown docs)
+pnpm run lint:all
+
+# Full project gate
+pnpm run check
+```
+
+Current blueprint normalization includes:
+
+- `schemaVersion` alignment (`3.0`)
+- required `kind` insertion when missing
+- required `version` insertion/normalization when missing or invalid
+- `id` normalization to kebab-case
 
 ## Architecture
 
@@ -421,11 +500,11 @@ The specification follows semantic versioning:
 - **Minor**: Backward-compatible feature additions
 - **Patch**: Bug fixes and clarifications
 
-Current version: **2.1.0**
+Current major version: **3.0** (specification patch updates may apply, see `SPECIFICATION.md` changelog)
 
 ## Requirements
 
-- Node.js >= 18.0.0
+- Node.js >= 22.0.0
 - npm >= 8.0.0 or pnpm >= 7.0.0
 
 ## License

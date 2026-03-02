@@ -12,16 +12,17 @@ const Ajv = require('ajv');
 const addFormats = require('ajv-formats');
 
 // Load the JSON Schema definition
-const schemaDefinition = require('../schemas/v2.1.0/context-schema.json');
+const schemaDefinition = require('../schemas/v3.0.0/context-schema.json');
 
 /**
  *
  */
 class SchemaValidator {
   /**
-   *
+   * Create a schema validator instance.
+   * @param {object | null} schema - Optional schema definition override.
    */
-  constructor() {
+  constructor(schema = null) {
     this.ajv = new Ajv({
       allErrors: true,
       verbose: true,
@@ -29,7 +30,8 @@ class SchemaValidator {
     });
     addFormats(this.ajv);
 
-    this.validator = this.ajv.compile(schemaDefinition);
+    this.schemaDefinition = schema || schemaDefinition;
+    this.validator = this.ajv.compile(this.schemaDefinition);
     this.dependencies = new Map();
   }
 
@@ -246,7 +248,7 @@ class SchemaValidator {
   validatePlatformConfig(platform, config) {
     const errors = [];
 
-    if (!config.compatible) {
+    if (config.compatible === false) {
       return errors; // Skip validation for incompatible platforms
     }
 
@@ -363,6 +365,15 @@ class SchemaValidator {
   hasCyclicDependencies(schema) {
     const visited = new Set();
     const recursionStack = new Set();
+    const normalizeDependencyId = (dependency) => {
+      if (typeof dependency === 'string') {
+        return dependency;
+      }
+      if (dependency && typeof dependency === 'object') {
+        return dependency.id;
+      }
+      return null;
+    };
 
     const hasCycle = (schemaId, requires = []) => {
       if (recursionStack.has(schemaId)) {
@@ -376,7 +387,11 @@ class SchemaValidator {
       recursionStack.add(schemaId);
 
       for (const dependency of requires) {
-        if (hasCycle(dependency, this.dependencies.get(dependency) || [])) {
+        const dependencyId = normalizeDependencyId(dependency);
+        if (!dependencyId) {
+          continue;
+        }
+        if (hasCycle(dependencyId, this.dependencies.get(dependencyId) || [])) {
           return true;
         }
       }
@@ -396,7 +411,11 @@ class SchemaValidator {
    */
   findRelationshipConflicts(schema) {
     const errors = [];
-    const requires = new Set(schema.requires || []);
+    const requires = new Set(
+      (schema.requires || [])
+        .map((dependency) => (typeof dependency === 'string' ? dependency : dependency?.id))
+        .filter(Boolean)
+    );
     const conflicts = new Set(schema.conflicts || []);
 
     // Check for schemas that are both required and conflicted
@@ -421,9 +440,15 @@ class SchemaValidator {
    */
   validateRelationships(schema, allSchemas) {
     const errors = [];
+    const normalizeDependencyId = (dependency) =>
+      typeof dependency === 'string' ? dependency : dependency?.id;
 
     // Check if required dependencies exist
-    for (const requiredId of schema.requires || []) {
+    for (const requiredDependency of schema.requires || []) {
+      const requiredId = normalizeDependencyId(requiredDependency);
+      if (!requiredId) {
+        continue;
+      }
       if (!allSchemas.has(requiredId)) {
         errors.push({
           type: 'missing_dependency',

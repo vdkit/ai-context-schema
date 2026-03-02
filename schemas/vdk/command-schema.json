@@ -1,0 +1,234 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Claude Code Command Schema",
+  "description": "Schema for validating Claude Code command definitions in VDK",
+  "type": "object",
+  "required": ["id", "name", "description", "commandType", "target"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Unique command identifier in kebab-case"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50,
+      "description": "Display name for the command"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 200,
+      "description": "Brief command description"
+    },
+    "target": {
+      "type": "string",
+      "enum": ["claude-code"],
+      "description": "Target platform - Claude Code"
+    },
+    "commandType": {
+      "type": "string",
+      "enum": ["slash", "custom-slash", "mcp", "workflow", "hook"],
+      "description": "Type of Claude Code command"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version number"
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["user", "project", "global"],
+      "default": "project",
+      "description": "Command scope and sharing level"
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "allowedTools": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tools this command is allowed to use"
+        },
+        "requiredApproval": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether command requires manual approval"
+        }
+      }
+    },
+    "claudeCode": {
+      "type": "object",
+      "properties": {
+        "slashCommand": {
+          "type": "string",
+          "pattern": "^/[a-z0-9:_-]+$",
+          "description": "Slash command name (e.g., /project:optimize)"
+        },
+        "arguments": {
+          "type": "object",
+          "properties": {
+            "supports": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether command accepts arguments"
+            },
+            "placeholder": {
+              "type": "string",
+              "default": "$ARGUMENTS",
+              "description": "Placeholder for arguments in command content"
+            },
+            "examples": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Example argument values"
+            }
+          }
+        },
+        "fileReferences": {
+          "type": "object",
+          "properties": {
+            "supports": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether command supports @file references"
+            },
+            "autoInclude": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Files to automatically include in context"
+            }
+          }
+        },
+        "bashCommands": {
+          "type": "object",
+          "properties": {
+            "supports": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether command includes bash command execution"
+            },
+            "commands": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Bash commands to execute with ! prefix"
+            }
+          }
+        },
+        "mcpIntegration": {
+          "type": "object",
+          "properties": {
+            "requiredServers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Required MCP servers for this command"
+            },
+            "optionalServers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Optional MCP servers that enhance functionality"
+            }
+          }
+        },
+        "memoryFiles": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "CLAUDE.md files this command references"
+        },
+        "hooks": {
+          "type": "object",
+          "properties": {
+            "preExecution": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Hook commands to run before execution"
+            },
+            "postExecution": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Hook commands to run after execution"
+            }
+          }
+        }
+      }
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["usage", "description"],
+        "properties": {
+          "usage": {
+            "type": "string",
+            "description": "Example command usage"
+          },
+          "description": {
+            "type": "string",
+            "description": "What this example demonstrates"
+          },
+          "context": {
+            "type": "string",
+            "description": "When to use this example"
+          },
+          "expectedOutcome": {
+            "type": "string",
+            "description": "Expected result or behavior"
+          }
+        }
+      }
+    },
+    "installation": {
+      "type": "object",
+      "properties": {
+        "dependencies": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Required dependencies or MCP servers"
+        },
+        "setupSteps": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Setup steps required before using command"
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Searchable tags for categorization"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "development",
+        "testing",
+        "debugging",
+        "refactoring",
+        "documentation",
+        "git",
+        "analysis",
+        "security",
+        "performance",
+        "meta",
+        "quality",
+        "workflow",
+        "operations"
+      ],
+      "description": "Primary category for the command"
+    },
+    "author": {
+      "type": "string",
+      "description": "Command author or organization"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Last update date (YYYY-MM-DD)"
+    },
+    "compatibilityNotes": {
+      "type": "string",
+      "description": "Notes about Claude Code version compatibility"
+    }
+  }
+}

@@ -304,7 +304,7 @@ Implement proper TypeScript interfaces for props...
 
 ### AI Context Schema Equivalent
 
-```yaml
+````yaml
 ---
 id: 'typescript-guidelines'
 title: 'TypeScript Development Guidelines'
@@ -345,7 +345,7 @@ Use strict type checking for all TypeScript projects...
     }
   ]
 }
-```
+````
 
 ### AI Context Schema Equivalent
 
@@ -370,7 +370,7 @@ platforms:
   vscodium:
     compatible: true
     extension: 'ai-context-schema-oss'
-    configPath: ".vscode-oss/"
+    configPath: '.vscode-oss/'
   claude-code:
     compatible: true
     memory: true
@@ -398,11 +398,11 @@ JetBrains IDEs typically use file templates and inspection profiles:
   <extension>tsx</extension>
   <content>
     import React from 'react';
-    
+
     interface ${NAME}Props {
       // Define props here
     }
-    
+
     export const ${NAME}: React.FC<${NAME}Props> = (props) => {
       return <div>Hello World</div>;
     };
@@ -412,7 +412,7 @@ JetBrains IDEs typically use file templates and inspection profiles:
 
 ### AI Context Schema Equivalent
 
-```yaml
+````yaml
 ---
 id: 'react-jetbrains-patterns'
 title: 'React Component Patterns for JetBrains'
@@ -461,10 +461,10 @@ interface ComponentNameProps {
   onClick?: () => void;
 }
 
-export const ComponentName: React.FC<ComponentNameProps> = ({ 
-  title, 
-  children, 
-  onClick 
+export const ComponentName: React.FC<ComponentNameProps> = ({
+  title,
+  children,
+  onClick
 }) => {
   return (
     <div onClick={onClick}>
@@ -473,19 +473,22 @@ export const ComponentName: React.FC<ComponentNameProps> = ({
     </div>
   );
 };
-```
+````
 
 ## Platform Notes
 
 ### WebStorm
+
 - Use built-in React component templates
 - Enable TypeScript inspections for better type checking
 - Configure Node.js integration for proper module resolution
 
 ### IntelliJ IDEA
+
 - Install JavaScript/TypeScript plugins
 - Configure file templates for consistent component structure
-```
+
+````
 
 ## Migrating from Zed Configuration
 
@@ -504,11 +507,11 @@ export const ComponentName: React.FC<ComponentNameProps> = ({
     ]
   }
 }
-```
+````
 
 ### AI Context Schema Equivalent
 
-```yaml
+````yaml
 ---
 id: 'python-zed-guidelines'
 title: 'Python Guidelines for Zed'
@@ -547,15 +550,17 @@ Always use type hints for function parameters and return values:
 def process_data(data: List[Dict[str, Any]]) -> Dict[str, int]:
     """Process data and return summary statistics."""
     return {"count": len(data), "total": sum(len(item) for item in data)}
-```
+````
 
 ## Platform Notes
 
 ### Zed Editor
+
 - Utilizes high-performance parsing for real-time feedback
 - Collaborative features work with shared context schemas
 - AI features integrate seamlessly with project-level context
-```
+
+````
 
 ## Migrating from Custom JSON Formats
 
@@ -575,7 +580,7 @@ def process_data(data: List[Dict[str, Any]]) -> Dict[str, int]:
     "error": "return 404 for not found"
   }
 }
-```
+````
 
 ### Migration Script Template
 

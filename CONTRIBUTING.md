@@ -63,7 +63,7 @@ npm test
 
 #### Creating New Context Schemas
 
-1. **Follow the specification**: Ensure your schema conforms to AI Context Schema v2.1.0
+1. **Follow the specification**: Ensure your schema conforms to AI Context Schema v3.0.0
 2. **Use descriptive IDs**: Use kebab-case identifiers that clearly describe the context
 3. **Provide complete platform support**: Test compatibility across major platforms
 4. **Include comprehensive examples**: Add code examples and anti-patterns
@@ -76,8 +76,10 @@ npm test
 id: 'your-context-id'
 title: 'Clear, Descriptive Title'
 description: 'Detailed description of what this context provides (10-500 chars)'
+schemaVersion: '3.0.0'
+kind: 'skill' # or command, workflow, agent, etc.
 version: '1.0.0'
-category: 'technology' # or language, stack, task, etc.
+category: 'technology' # optional editorial grouping
 platforms:
   claude-code:
     compatible: true
@@ -104,7 +106,7 @@ platforms:
     performance: 'high'
   jetbrains:
     compatible: true
-    ide: 'webstorm'  # or appropriate IDE
+    ide: 'webstorm' # or appropriate IDE
     mcpIntegration: true
     fileTemplates: true
   vscode:
@@ -193,6 +195,7 @@ interface PlatformAdapter {
 #### Adapter Implementation Examples
 
 **Claude Desktop Adapter**
+
 ```typescript
 export class ClaudeDesktopAdapter implements PlatformAdapter {
   name = 'claude-desktop';
@@ -221,6 +224,7 @@ export class ClaudeDesktopAdapter implements PlatformAdapter {
 ```
 
 **JetBrains IDE Adapter**
+
 ```typescript
 export class JetBrainsAdapter implements PlatformAdapter {
   name = 'jetbrains';
@@ -242,7 +246,10 @@ export class JetBrainsAdapter implements PlatformAdapter {
 
       // Handle code inspections
       if (config.inspections) {
-        files[`.idea/inspectionProfiles/${schema.id}.xml`] = this.generateInspectionProfile(schema, config);
+        files[`.idea/inspectionProfiles/${schema.id}.xml`] = this.generateInspectionProfile(
+          schema,
+          config
+        );
       }
 
       // Handle MCP integration for 2025.1+ versions
@@ -257,6 +264,7 @@ export class JetBrainsAdapter implements PlatformAdapter {
 ```
 
 **Zed Adapter**
+
 ```typescript
 export class ZedAdapter implements PlatformAdapter {
   name = 'zed';
@@ -293,6 +301,7 @@ export class ZedAdapter implements PlatformAdapter {
 ```
 
 **VS Code Family Adapter**
+
 ```typescript
 export class VSCodeAdapter implements PlatformAdapter {
   name = 'vscode';
@@ -328,11 +337,13 @@ export class VSCodeAdapter implements PlatformAdapter {
 #### Platform-Specific Considerations
 
 **Character Limits**
+
 - **Windsurf/Windsurf Next**: 6K character limit, implement intelligent truncation
 - **VS Code**: No limits, but consider memory usage
 - **JetBrains**: No limits, optimize for IDE performance
 
 **MCP Integration**
+
 - **Claude Code/Desktop**: Built-in MCP support
 - **VS Code Family**: Via `.vscode/mcp.json` configuration
 - **JetBrains IDEs**: 2025.1+ versions via Settings → AI Assistant
@@ -340,11 +351,13 @@ export class VSCodeAdapter implements PlatformAdapter {
 - **Windsurf**: Via `~/.codeium/windsurf/mcp_config.json`
 
 **File Pattern Matching**
+
 - **Cursor**: Auto-attachment via globs array
 - **VS Code**: File associations and workspace patterns
 - **JetBrains**: Scope-based activation and file templates
 
 **Priority Systems**
+
 - **Claude Code/Desktop/Windsurf**: 1-10 numeric scale
 - **Cursor**: high/medium/low string values
 - **GitHub Copilot**: 1-10 for guideline priority
@@ -373,8 +386,8 @@ export class VSCodeAdapter implements PlatformAdapter {
 ### For Schema Contributions
 
 1. **Create a new branch**: `git checkout -b add-schema-[your-schema-name]`
-2. **Add your schema**: Place in `schemas/v2.1.0/examples/` directory
-3. **Validate your schema**: Run `npm run validate schemas/v2.1.0/examples/your-schema.yaml`
+2. **Add your schema**: Place in `schemas/v3.0.0/examples/` directory
+3. **Validate your schema**: Run `npm run validate schemas/v3.0.0/examples/your-schema.yaml`
 4. **Test across platforms**: Verify compatibility claims with actual testing
 5. **Update documentation**: Add to README example list if appropriate
 6. **Submit pull request**: Use the schema contribution template

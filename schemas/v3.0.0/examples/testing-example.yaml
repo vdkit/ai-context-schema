@@ -2,7 +2,9 @@
 id: "testing-strategy-patterns"
 title: "Testing Strategy and Best Practices"
 description: "Comprehensive testing patterns for unit, integration, and end-to-end testing"
+schemaVersion: "3.0"
 version: "1.0.0"
+kind: "skill"
 lastUpdated: "2024-01-15"
 category: "task"
 subcategory: "quality-assurance"
@@ -118,7 +120,7 @@ Follow the testing pyramid principle:
 
 ```
     /\     E2E Tests (Few)
-   /  \    
+   /  \
   /____\   Integration Tests (Some)
  /______\  Unit Tests (Many)
 ```
@@ -197,7 +199,7 @@ describe('UserProfile', () => {
 
   it('should display user information', () => {
     render(<UserProfile user={mockUser} />);
-    
+
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText('john@example.com')).toBeInTheDocument();
   });
@@ -205,18 +207,18 @@ describe('UserProfile', () => {
   it('should call onEdit when edit button clicked', async () => {
     const mockOnEdit = jest.fn();
     const user = userEvent.setup();
-    
+
     render(<UserProfile user={mockUser} onEdit={mockOnEdit} />);
-    
+
     const editButton = screen.getByRole('button', { name: /edit/i });
     await user.click(editButton);
-    
+
     expect(mockOnEdit).toHaveBeenCalledWith(mockUser.id);
   });
 
   it('should show loading state', () => {
     render(<UserProfile user={mockUser} loading={true} />);
-    
+
     expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
     expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
   });
@@ -446,14 +448,14 @@ test.describe('User Management', () => {
 
   test('should edit existing user', async ({ page }) => {
     await page.goto('/users');
-    
+
     // Click edit button for first user
     await page.click('[data-testid="user-row"]:first-child [data-testid="edit-button"]');
-    
+
     // Update name
     await page.fill('[data-testid="name-input"]', 'Jane Smith');
     await page.click('[data-testid="submit-button"]');
-    
+
     // Verify update
     await expect(page.locator('[data-testid="user-list"]'))
       .toContainText('Jane Smith');
@@ -471,16 +473,16 @@ describe('User Management', () => {
 
   it('should create new user', () => {
     cy.get('[data-testid="create-user-button"]').click();
-    
+
     cy.get('[data-testid="name-input"]').type('John Doe');
     cy.get('[data-testid="email-input"]').type('john@example.com');
     cy.get('[data-testid="role-select"]').select('user');
-    
+
     cy.get('[data-testid="submit-button"]').click();
-    
+
     cy.get('[data-testid="success-message"]')
       .should('contain', 'User created successfully');
-    
+
     cy.get('[data-testid="user-list"]')
       .should('contain', 'John Doe');
   });
@@ -500,13 +502,13 @@ export const userFixtures = {
     email: 'john@example.com',
     role: 'user'
   },
-  
+
   adminUser: {
     name: 'Admin User',
     email: 'admin@example.com',
     role: 'admin'
   },
-  
+
   invalidUser: {
     name: '',
     email: 'invalid-email',
@@ -542,7 +544,7 @@ export const userFactory = {
     ...overrides
   }),
 
-  buildMany: (count: number, overrides = {}) => 
+  buildMany: (count: number, overrides = {}) =>
     Array.from({ length: count }, () => userFactory.build(overrides))
 };
 
@@ -572,9 +574,9 @@ beforeEach(() => {
 
 test('should handle email service failure', async () => {
   mockEmailService.sendWelcomeEmail.mockRejectedValue(new Error('Email service down'));
-  
+
   const result = await userService.createUser(userData);
-  
+
   expect(result.emailSent).toBe(false);
 });
 ```
@@ -598,9 +600,9 @@ beforeEach(() => {
 test('should return users from repository', async () => {
   const users = [userFactory.build(), userFactory.build()];
   mockUserRepository.find.mockResolvedValue(users);
-  
+
   const result = await userService.getAllUsers();
-  
+
   expect(result).toEqual(users);
 });
 ```
@@ -638,11 +640,11 @@ import { performance } from 'perf_hooks';
 describe('Performance Tests', () => {
   test('should process large dataset efficiently', () => {
     const largeDataset = userFactory.buildMany(10000);
-    
+
     const startTime = performance.now();
     const result = processUsers(largeDataset);
     const endTime = performance.now();
-    
+
     const executionTime = endTime - startTime;
     expect(executionTime).toBeLessThan(1000); // Should complete within 1 second
     expect(result).toHaveLength(10000);

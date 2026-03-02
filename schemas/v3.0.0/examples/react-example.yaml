@@ -2,7 +2,9 @@
 id: "react-component-patterns"
 title: "React Component Development"
 description: "Modern React component development patterns with TypeScript, hooks, and performance optimization"
+schemaVersion: "3.0"
 version: "1.2.0"
+kind: "skill"
 lastUpdated: "2024-01-15"
 category: "technology"
 subcategory: "frontend-framework"
@@ -117,11 +119,11 @@ interface UserProfileProps {
 export const UserProfile: React.FC<UserProfileProps> = ({ userId, onUpdate }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     fetchUser(userId).then(setUser).finally(() => setLoading(false));
   }, [userId]);
-  
+
   return loading ? <Spinner /> : <UserDetails user={user} onUpdate={onUpdate} />;
 };
 

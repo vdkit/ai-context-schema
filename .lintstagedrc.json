@@ -1,6 +1,10 @@
 {
-  "*.js": ["prettier --write"],
-  "*.json": ["prettier --write"],
-  "*.md": ["prettier --write"],
-  "validation/**/*.js": ["node validation/schema-validator.js schemas/v2.1.0/examples"]
+  "*.js": ["oxfmt --write"],
+  "*.json": ["oxfmt --write"],
+  "*.md": ["oxfmt --write"],
+  "schemas/v3.0.0/examples/*.{yaml,yml}": [
+    "vdk-blueprints-fix --write --target schemas/v3.0.0/examples",
+    "node validation/schema-validator.js schemas/v3.0.0/examples"
+  ],
+  "validation/**/*.js": ["node validation/schema-validator.js schemas/v3.0.0/examples"]
 }

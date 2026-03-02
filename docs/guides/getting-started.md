@@ -36,6 +36,8 @@ Create a file called `my-first-schema.yaml`:
 id: "my-react-patterns"
 title: "My React Development Patterns"
 description: "Personal React development guidelines and best practices"
+schemaVersion: "3.0.0"
+kind: "skill"
 version: "1.0.0"
 category: "technology"
 framework: "react"
@@ -150,16 +152,19 @@ vdk generate cursor --schema my-first-schema.yaml
 Each platform has specific file locations and formats:
 
 **AI Assistants:**
+
 - **Claude Code**: Place in `.claude/` directory
 - **Claude Desktop**: Place in `.claude-desktop/rules/` directory
 - **Generic AI**: Place in `.ai/rules/` directory
 
 **AI-First Editors:**
+
 - **Cursor**: Place in `.cursor/rules/` or `.ai/rules/` directory
 - **Windsurf**: Place in `.windsurf/rules/` directory
 - **Windsurf Next**: Place in `.windsurf-next/rules/` directory
 
 **Code Editors & IDEs:**
+
 - **VS Code**: Place in `.vscode/ai-rules/` directory
 - **VS Code Insiders**: Place in `.vscode-insiders/ai-rules/` directory
 - **VSCodium**: Place in `.vscode-oss/ai-rules/` directory
@@ -167,6 +172,7 @@ Each platform has specific file locations and formats:
 - **JetBrains IDEs**: Place in `.idea/ai-rules/` directory
 
 **GitHub Services:**
+
 - **GitHub Copilot**: Place in `.github/copilot/` directory
 
 ## Understanding Schema Structure
@@ -179,8 +185,10 @@ Every schema MUST include these fields:
 id: 'unique-kebab-case-identifier'
 title: 'Human Readable Title'
 description: 'Detailed description of what this schema provides'
+schemaVersion: '3.0.0'
+kind: 'skill'
 version: '1.0.0' # Semantic versioning
-category: 'technology' # or language, stack, task, etc.
+category: 'technology' # Optional editorial grouping
 platforms:
   # At least one platform must be specified
   claude-code:
@@ -194,6 +202,7 @@ Each platform has specific configuration options:
 #### AI Assistants
 
 **Claude Code**
+
 ```yaml
 claude-code:
   compatible: true
@@ -205,6 +214,7 @@ claude-code:
 ```
 
 **Claude Desktop**
+
 ```yaml
 claude-desktop:
   compatible: true
@@ -214,17 +224,19 @@ claude-desktop:
 ```
 
 **Generic AI**
+
 ```yaml
 generic-ai:
   compatible: true
-  configPath: ".ai/"
-  rulesPath: ".ai/rules/"
+  configPath: '.ai/'
+  rulesPath: '.ai/rules/'
   priority: 7 # Context priority (1-10)
 ```
 
 #### AI-First Editors
 
 **Cursor**
+
 ```yaml
 cursor:
   compatible: true
@@ -234,6 +246,7 @@ cursor:
 ```
 
 **Windsurf**
+
 ```yaml
 windsurf:
   compatible: true
@@ -243,6 +256,7 @@ windsurf:
 ```
 
 **Zed**
+
 ```yaml
 zed:
   compatible: true
@@ -254,6 +268,7 @@ zed:
 #### Code Editors & IDEs
 
 **VS Code**
+
 ```yaml
 vscode:
   compatible: true
@@ -263,6 +278,7 @@ vscode:
 ```
 
 **JetBrains IDEs**
+
 ```yaml
 jetbrains:
   compatible: true
@@ -275,6 +291,7 @@ jetbrains:
 #### GitHub Services
 
 **GitHub Copilot**
+
 ```yaml
 github-copilot:
   compatible: true
@@ -608,9 +625,9 @@ Error: Auto-attached activation requires globs
 
 Study the example schemas in this repository:
 
-- [`react-components.yaml`](../schemas/v2.1.0/examples/react-components.yaml) - React development patterns
-- [`api-development.yaml`](../schemas/v2.1.0/examples/api-development.yaml) - REST API patterns
-- [`testing-strategy.yaml`](../schemas/v2.1.0/examples/testing-strategy.yaml) - Testing approaches
+- [`react-example.yaml`](../../schemas/v3.0.0/examples/react-example.yaml) - React development patterns
+- [`api-example.yaml`](../../schemas/v3.0.0/examples/api-example.yaml) - REST API patterns
+- [`testing-example.yaml`](../../schemas/v3.0.0/examples/testing-example.yaml) - Testing approaches
 
 ### Join the Community
 

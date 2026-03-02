@@ -18,8 +18,10 @@ describe('SchemaValidator', () => {
 id: test-schema
 title: Test Schema
 description: A test schema
+schemaVersion: 3.0
 version: 1.0.0
-category: test
+kind: skill
+category: technology
 platforms:
   claude-code:
     compatible: true

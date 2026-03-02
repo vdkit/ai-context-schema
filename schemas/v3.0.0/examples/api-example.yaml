@@ -2,7 +2,9 @@
 id: "api-development-patterns"
 title: "REST API Development"
 description: "RESTful API development patterns with Express.js, TypeScript, and OpenAPI documentation"
+schemaVersion: "3.0"
 version: "1.1.0"
+kind: "skill"
 lastUpdated: "2024-01-10"
 category: "technology"
 subcategory: "backend-framework"
@@ -175,12 +177,12 @@ export class UserController implements UserController {
     try {
       const { page = 1, limit = 10, search } = req.query;
       const pagination = { page: Number(page), limit: Number(limit) };
-      
+
       const result = await this.userService.getUsers({
         pagination,
         search: search as string
       });
-      
+
       res.status(200).json({
         data: result.users,
         pagination: result.pagination,
@@ -195,7 +197,7 @@ export class UserController implements UserController {
     try {
       const userData = req.body;
       const user = await this.userService.createUser(userData);
-      
+
       res.status(201).json({
         data: user,
         message: 'User created successfully'
@@ -238,7 +240,7 @@ export const validateRequest = <T extends z.ZodType>(schema: T) => {
         query: req.query,
         params: req.params
       });
-      
+
       req.validated = validation;
       next();
     } catch (error) {
@@ -255,7 +257,7 @@ export const validateRequest = <T extends z.ZodType>(schema: T) => {
 };
 
 // Usage
-router.post('/users', 
+router.post('/users',
   validateRequest(CreateUserSchema),
   userController.createUser
 );
@@ -475,8 +477,8 @@ describe('User API', () => {
         .query({ search: 'john' })
         .expect(200);
 
-      expect(response.body.data.every((user: any) => 
-        user.name.toLowerCase().includes('john') || 
+      expect(response.body.data.every((user: any) =>
+        user.name.toLowerCase().includes('john') ||
         user.email.toLowerCase().includes('john')
       )).toBe(true);
     });

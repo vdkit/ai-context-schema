@@ -1,0 +1,612 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VDK Blueprint Schema v3.0",
+  "description": "Schema for validating AI Blueprint frontmatter and structure with v3.0 component architecture",
+  "type": "object",
+  "required": ["schemaVersion", "id", "title", "description", "version", "kind", "platforms"],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "3.0",
+      "description": "Schema version identifier - must be 3.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Unique identifier in kebab-case"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Human-readable title"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 500,
+      "description": "Detailed description"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9-]+)?(\\+[a-zA-Z0-9-]+)?$",
+      "description": "Semantic version number"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "project-memory",
+        "conditional-rule",
+        "skill",
+        "command",
+        "workflow",
+        "agent",
+        "hook",
+        "mcp-integration",
+        "plugin-distribution"
+      ],
+      "description": "Canonical blueprint kind"
+    },
+    "specificityLayer": {
+      "type": "string",
+      "enum": ["L0", "L1", "L2", "L3", "L4"],
+      "description": "Optional retrieval specificity tier (L4 is provenance/variant tier)"
+    },
+    "equivalenceOutcome": {
+      "type": "string",
+      "enum": ["lossless", "lossy", "unsupported"],
+      "description": "Optional adaptation equivalence outcome across platform translations"
+    },
+    "curation": {
+      "type": "object",
+      "description": "Optional curation and lifecycle metadata",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["curated", "experimental", "community", "deprecated"]
+        },
+        "source": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Curating source or channel (e.g., core-library, community)"
+        },
+        "curatedBy": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "curatedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "ISO date format (YYYY-MM-DD)"
+        }
+      }
+    },
+    "lastUpdated": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "ISO date format (YYYY-MM-DD)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "core",
+        "language",
+        "technology",
+        "stack",
+        "task",
+        "assistant",
+        "tool",
+        "project",
+        "agent-system",
+        "command",
+        "skill",
+        "workflow",
+        "rule",
+        "plugin"
+      ],
+      "description": "Primary categorization"
+    },
+    "subcategory": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "Fine-grained grouping"
+    },
+    "framework": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "Specific technology framework"
+    },
+    "language": {
+      "type": "string",
+      "maxLength": 30,
+      "description": "Programming language"
+    },
+    "complexity": {
+      "type": "string",
+      "enum": ["simple", "medium", "complex"],
+      "description": "Complexity level"
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["file", "component", "feature", "project", "system"],
+      "description": "Scope of impact"
+    },
+    "audience": {
+      "type": "string",
+      "enum": ["developer", "architect", "team-lead", "junior", "senior", "any"],
+      "description": "Target audience"
+    },
+    "maturity": {
+      "type": "string",
+      "enum": ["experimental", "beta", "stable", "deprecated"],
+      "description": "Maturity level"
+    },
+    "platforms": {
+      "type": "object",
+      "description": "Platform-specific component configurations",
+      "properties": {
+        "claude-code": { "$ref": "#/definitions/claudeCodePlatform" },
+        "cursor": { "$ref": "#/definitions/cursorPlatform" },
+        "github-copilot": { "$ref": "#/definitions/copilotPlatform" },
+        "windsurf": { "$ref": "#/definitions/windsurfPlatform" },
+        "continue": { "$ref": "#/definitions/continuePlatform" },
+        "aider": { "$ref": "#/definitions/aiderPlatform" },
+        "openai-codex": { "$ref": "#/definitions/openaiCodexPlatform" },
+        "gemini-cli": { "$ref": "#/definitions/geminiPlatform" },
+        "tabnine": { "$ref": "#/definitions/tabninePlatform" },
+        "zed": { "$ref": "#/definitions/zedPlatform" },
+        "jetbrains": { "$ref": "#/definitions/jetbrainsPlatform" }
+      },
+      "additionalProperties": { "$ref": "#/definitions/genericPlatform" },
+      "minProperties": 1
+    },
+    "source": {
+      "type": "object",
+      "description": "Original source content for conversion",
+      "properties": {
+        "content": { "type": "string" },
+        "format": { "type": "string", "enum": ["markdown", "yaml", "json", "toml"] },
+        "hasYAMLFrontmatter": { "type": "boolean" },
+        "platform": { "type": "string" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Semantic metadata for intelligent conversion",
+      "properties": {
+        "componentType": {
+          "type": "string",
+          "enum": ["agent", "rule", "command", "skill", "workflow", "main", "settings"]
+        },
+        "triggers": { "type": "array", "items": { "type": "string" } },
+        "tools": { "type": "array", "items": { "type": "string" } },
+        "expertise": { "type": "array", "items": { "type": "string" } },
+        "model": { "type": "string" }
+      }
+    },
+    "requires": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+              "version": { "type": "string" }
+            }
+          }
+        ]
+      },
+      "uniqueItems": true
+    },
+    "suggests": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+      "uniqueItems": true
+    },
+    "conflicts": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+      "uniqueItems": true
+    },
+    "supersedes": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+      "uniqueItems": true
+    },
+    "author": { "type": "string", "maxLength": 100 },
+    "contributors": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 100 },
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$", "maxLength": 30 },
+      "uniqueItems": true,
+      "maxItems": 20
+    },
+    "license": { "type": "string" },
+    "repository": { "type": "string", "format": "uri" }
+  },
+  "definitions": {
+    "genericPlatform": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "components": { "type": "object" }
+      }
+    },
+    "componentManifest": {
+      "type": "object",
+      "required": ["name", "file"],
+      "properties": {
+        "name": { "type": "string" },
+        "file": { "type": "string" },
+        "enabled": { "type": "boolean", "default": true }
+      }
+    },
+    "claudeCodePlatform": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "main": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "claude-main" },
+                "location": { "type": "string", "default": "CLAUDE.md" },
+                "enabled": { "type": "boolean" }
+              }
+            },
+            "agents": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "claude-agent" },
+                "location": { "type": "string", "default": ".claude/agents/" },
+                "enabled": { "type": "boolean" },
+                "manifests": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      { "$ref": "#/definitions/componentManifest" },
+                      {
+                        "properties": {
+                          "tools": { "type": "array", "items": { "type": "string" } },
+                          "model": { "type": "string" },
+                          "triggers": { "type": "array", "items": { "type": "string" } }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "rules": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "claude-rule" },
+                "location": { "type": "string", "default": ".claude/rules/" },
+                "enabled": { "type": "boolean" },
+                "manifests": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      { "$ref": "#/definitions/componentManifest" },
+                      {
+                        "properties": {
+                          "paths": { "type": "array", "items": { "type": "string" } }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "commands": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "claude-command" },
+                "location": { "type": "string", "default": ".claude/commands/" },
+                "enabled": { "type": "boolean" },
+                "manifests": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      { "$ref": "#/definitions/componentManifest" },
+                      {
+                        "properties": {
+                          "allowedTools": { "type": "array", "items": { "type": "string" } },
+                          "argumentHint": { "type": "string" }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "skills": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "claude-skill" },
+                "location": { "type": "string", "default": ".claude/skills/" },
+                "enabled": { "type": "boolean" },
+                "manifests": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/componentManifest" }
+                }
+              }
+            },
+            "settings": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "claude-settings" },
+                "location": { "type": "string", "default": ".claude/settings.json" },
+                "enabled": { "type": "boolean" },
+                "permissions": {
+                  "type": "object",
+                  "properties": {
+                    "allow": { "type": "array", "items": { "type": "string" } },
+                    "ask": { "type": "array", "items": { "type": "string" } },
+                    "deny": { "type": "array", "items": { "type": "string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cursorPlatform": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "main": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "cursor-main" },
+                "location": { "type": "string", "default": ".cursor/rules/main.mdc" },
+                "enabled": { "type": "boolean" }
+              }
+            },
+            "rules": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "cursor-rule" },
+                "location": { "type": "string", "default": ".cursor/rules/" },
+                "enabled": { "type": "boolean" },
+                "format": { "const": "mdc" },
+                "manifests": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      { "$ref": "#/definitions/componentManifest" },
+                      {
+                        "properties": {
+                          "globs": { "type": "array", "items": { "type": "string" } },
+                          "activation": {
+                            "enum": ["auto-attached", "agent-requested", "manual", "always"]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "copilotPlatform": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "repo-level": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "copilot-repo" },
+                "location": { "type": "string", "default": ".github/copilot-instructions.md" },
+                "enabled": { "type": "boolean" },
+                "constraints": {
+                  "type": "object",
+                  "properties": {
+                    "maxChars": { "type": "number", "default": 3000 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "windsurfPlatform": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "rules": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "windsurf-rule" },
+                "location": { "type": "string", "default": ".windsurf/rules/" },
+                "enabled": { "type": "boolean" },
+                "manifests": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      { "$ref": "#/definitions/componentManifest" },
+                      {
+                        "properties": {
+                          "globs": { "type": "array", "items": { "type": "string" } },
+                          "mode": { "enum": ["glob", "always"] }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "workflows": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "windsurf-workflow" },
+                "location": { "type": "string", "default": ".windsurf/workflows/" },
+                "enabled": { "type": "boolean" },
+                "manifests": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      { "$ref": "#/definitions/componentManifest" },
+                      {
+                        "properties": {
+                          "trigger": { "type": "array", "items": { "type": "string" } }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "continuePlatform": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "config": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "continue-config" },
+                "location": { "type": "string", "default": "~/.continue/config.yaml" },
+                "enabled": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "aiderPlatform": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "config": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "aider-config" },
+                "location": { "type": "string", "default": ".aider.conf.yml" },
+                "enabled": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "openaiCodexPlatform": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "agents": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "agents-md" },
+                "location": { "type": "string", "default": "AGENTS.md" },
+                "enabled": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "geminiPlatform": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "main": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "gemini-main" },
+                "location": { "type": "string", "default": "GEMINI.md" },
+                "enabled": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "tabninePlatform": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "guidelines": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "tabnine-guideline" },
+                "location": { "type": "string", "default": ".tabnine/guidelines/" },
+                "enabled": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "zedPlatform": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "settings": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "zed-settings" },
+                "location": { "type": "string", "default": "~/.config/zed/settings.json" },
+                "enabled": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "jetbrainsPlatform": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "object",
+          "properties": {
+            "aiignore": {
+              "type": "object",
+              "properties": {
+                "type": { "const": "aiignore" },
+                "location": { "type": "string", "default": ".aiignore" },
+                "enabled": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

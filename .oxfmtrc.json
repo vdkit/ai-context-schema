@@ -1,0 +1,27 @@
+{
+  "semi": true,
+  "trailingComma": "none",
+  "singleQuote": true,
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "endOfLine": "lf",
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "build/",
+    "coverage/",
+    ".next/",
+    ".nuxt/",
+    ".output/",
+    "test-results/",
+    "test-output/",
+    "generated/",
+    "pnpm-lock.yaml",
+    "schemas/v2.1.0/examples/*.yaml",
+    "schemas/v2.1.0/examples/*.yml",
+    "schemas/v3.0.0/examples/*.yaml",
+    "schemas/v3.0.0/examples/*.yml"
+  ]
+}

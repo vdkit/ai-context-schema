@@ -8,7 +8,7 @@ VDK implements AI Context Schema through three integrated components:
 
 ### 1. VDK CLI - Local Analysis Engine
 
-**Repository**: [entro314-labs/vdk-cli](https://github.com/entro314-labs/vdk-cli)  
+**Repository**: [vdkit/vdk-cli](https://github.com/vdkit/vdk-cli)
 **Package**: `@vibe-dev-kit/cli`
 
 The CLI provides:
@@ -36,28 +36,25 @@ vdk list --category technology
 
 ### 2. VDK Blueprints Repository - Context Schema Library
 
-**Repository**: [entro314-labs/VDK-Blueprints](https://github.com/entro314-labs/VDK-Blueprints)
+**Repository**: [vdkit/VDK-Blueprints](https://github.com/vdkit/VDK-Blueprints)
 
-Contains 109+ context schemas organized by:
+Contains a curated context schema library organized by:
 
-- **Core (4)**: Fundamental AI behaviors
-- **Languages (6)**: Programming language patterns
-- **Technologies (26)**: Framework-specific guidance
-- **Stacks (6)**: Multi-technology combinations
-- **Tasks (54)**: Development workflows
-- **Assistants (7)**: Platform configurations
-- **Tools (3)**: Development tool integrations
+- **Rules**: Coding standards, conventions, and guardrails
+- **Commands**: Reusable operational prompts and workflows
+- **Workflows**: End-to-end multi-step execution patterns
+- **Skills & Agents**: Reusable capabilities and execution personas
 
-All schemas conform to AI Context Schema v2.1.0 specification.
+All schemas conform to AI Context Schema v3.0.0 specification.
 
 ### 3. VDK Hub - Web Management Platform
 
-**URL**: [vdk.tools](https://vdk.tools)  
-**Repository**: [entro314-labs/vdk-hub](https://github.com/entro314-labs/vdk-hub)
+**URL**: [vdk.tools](https://vdk.tools)
+**Repository**: [vdkit/vdk-hub](https://github.com/vdkit/vdk-hub)
 
 Web platform providing:
 
-- **Schema Catalog**: Browse and search 109+ context schemas
+- **Schema Catalog**: Browse and search curated context schemas
 - **Generator Wizard**: 7-step custom package creation
 - **Collections**: Personal and team schema libraries
 - **Analytics**: Usage tracking and insights
@@ -69,6 +66,7 @@ VDK demonstrates complete platform adapter implementations for all 20+ supported
 ### AI Assistants & Services
 
 **Claude Code Adapter**
+
 ```typescript
 export class ClaudeCodeAdapter implements PlatformAdapter {
   async generate(schemas: ContextSchema[]): Promise<GeneratedFiles> {
@@ -89,6 +87,7 @@ export class ClaudeCodeAdapter implements PlatformAdapter {
 ```
 
 **Claude Desktop Adapter**
+
 ```typescript
 export class ClaudeDesktopAdapter implements PlatformAdapter {
   async generate(schemas: ContextSchema[]): Promise<GeneratedFiles> {
@@ -113,6 +112,7 @@ export class ClaudeDesktopAdapter implements PlatformAdapter {
 ```
 
 **Generic AI Adapter**
+
 ```typescript
 export class GenericAiAdapter implements PlatformAdapter {
   async generate(schemas: ContextSchema[]): Promise<GeneratedFiles> {
@@ -136,6 +136,7 @@ export class GenericAiAdapter implements PlatformAdapter {
 ### AI-First Editors
 
 **Cursor Adapter**
+
 ```typescript
 export class CursorAdapter implements PlatformAdapter {
   async generate(schemas: ContextSchema[]): Promise<GeneratedFiles> {
@@ -148,7 +149,10 @@ export class CursorAdapter implements PlatformAdapter {
       files[`.cursor/rules/${schema.id}.mdc`] = this.generateMDCFile(schema);
 
       if (cursorConfig.globs && cursorConfig.activation === 'auto-attached') {
-        files[`.cursor/patterns/${schema.id}.json`] = this.generatePatternConfig(schema, cursorConfig);
+        files[`.cursor/patterns/${schema.id}.json`] = this.generatePatternConfig(
+          schema,
+          cursorConfig
+        );
       }
     }
 
@@ -158,6 +162,7 @@ export class CursorAdapter implements PlatformAdapter {
 ```
 
 **Windsurf Adapter**
+
 ```typescript
 export class WindsurfAdapter implements PlatformAdapter {
   async generate(schemas: ContextSchema[]): Promise<GeneratedFiles> {
@@ -168,9 +173,16 @@ export class WindsurfAdapter implements PlatformAdapter {
       if (!config?.compatible) continue;
 
       // Handle character limit (6K max)
-      const optimizedContent = this.optimizeForCharacterLimit(schema, config.characterLimit || 6000);
+      const optimizedContent = this.optimizeForCharacterLimit(
+        schema,
+        config.characterLimit || 6000
+      );
 
-      files[`.windsurf/rules/${schema.id}.xml`] = this.generateXMLFormat(schema, optimizedContent, config);
+      files[`.windsurf/rules/${schema.id}.xml`] = this.generateXMLFormat(
+        schema,
+        optimizedContent,
+        config
+      );
     }
 
     return files;
@@ -181,6 +193,7 @@ export class WindsurfAdapter implements PlatformAdapter {
 ### Code Editors & IDEs
 
 **VS Code Family Adapter**
+
 ```typescript
 export class VSCodeAdapter implements PlatformAdapter {
   async generate(schemas: ContextSchema[]): Promise<GeneratedFiles> {
@@ -212,6 +225,7 @@ export class VSCodeAdapter implements PlatformAdapter {
 ```
 
 **JetBrains IDE Adapter**
+
 ```typescript
 export class JetBrainsAdapter implements PlatformAdapter {
   async generate(schemas: ContextSchema[]): Promise<GeneratedFiles> {
@@ -231,7 +245,10 @@ export class JetBrainsAdapter implements PlatformAdapter {
 
       // Handle code inspections
       if (config.inspections) {
-        files[`.idea/inspectionProfiles/${schema.id}.xml`] = this.generateInspectionProfile(schema, config);
+        files[`.idea/inspectionProfiles/${schema.id}.xml`] = this.generateInspectionProfile(
+          schema,
+          config
+        );
       }
 
       // Handle MCP integration (2025.1+)
@@ -246,6 +263,7 @@ export class JetBrainsAdapter implements PlatformAdapter {
 ```
 
 **Zed Adapter**
+
 ```typescript
 export class ZedAdapter implements PlatformAdapter {
   async generate(schemas: ContextSchema[]): Promise<GeneratedFiles> {
@@ -366,7 +384,7 @@ VDK provides comprehensive validation:
 
 ```typescript
 import Ajv from 'ajv';
-import { contextSchemaDefinition } from './schemas/v2.1.0/context-schema.json';
+import { contextSchemaDefinition } from './schemas/v3.0.0/context-schema.json';
 
 class SchemaValidator {
   private ajv = new Ajv({ allErrors: true });

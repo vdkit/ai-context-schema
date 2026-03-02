@@ -40,7 +40,7 @@ expect.extend({
   },
 
   toMatchSchemaVersion(received, version) {
-    const schemaVersion = received.version;
+    const schemaVersion = received.schemaVersion;
 
     return {
       message: () =>
@@ -54,11 +54,13 @@ expect.extend({
 
 // Global test utilities
 global.createTestSchema = (overrides = {}) => ({
+  schemaVersion: '3.0',
   id: 'test-schema',
   title: 'Test Schema',
   description: 'A test schema for unit testing',
   version: '1.0.0',
-  category: 'test',
+  kind: 'skill',
+  category: 'technology',
   platforms: {
     'claude-code': { compatible: true, memory: true },
     cursor: { compatible: true, activation: 'auto-attached', globs: ['**/*.test.js'] }
@@ -94,21 +96,25 @@ global.restoreConsole = () => {
 // Test data helpers
 global.testSchemas = {
   minimal: {
+    schemaVersion: '3.0',
     id: 'minimal-test',
     title: 'Minimal Test Schema',
     description: 'A minimal schema for testing',
     version: '1.0.0',
-    category: 'test',
+    kind: 'skill',
+    category: 'technology',
     platforms: {
       'claude-code': { compatible: true }
     }
   },
 
   complex: {
+    schemaVersion: '3.0',
     id: 'complex-test',
     title: 'Complex Test Schema',
     description: 'A complex schema with all features for testing',
     version: '2.1.0',
+    kind: 'skill',
     category: 'technology',
     subcategory: 'framework',
     framework: 'test-framework',

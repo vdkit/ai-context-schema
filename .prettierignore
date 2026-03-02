@@ -11,3 +11,5 @@ generated/
 pnpm-lock.yaml
 schemas/v2.1.0/examples/*.yaml
 schemas/v2.1.0/examples/*.yml
+schemas/v3.0.0/examples/*.yaml
+schemas/v3.0.0/examples/*.yml

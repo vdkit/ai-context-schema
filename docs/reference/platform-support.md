@@ -9,9 +9,10 @@ AI Context Schema is designed to work across multiple AI coding assistant platfo
 #### Anthropic Claude
 
 ##### Claude Code
-**Status**: ✅ Full Support  
-**Configuration Location**: `.claude/`  
-**Schema Version**: v2.1.0+
+
+**Status**: ✅ Full Support
+**Configuration Location**: `.claude/`
+**Schema Version**: v3.0.0+
 
 ```yaml
 platforms:
@@ -26,8 +27,9 @@ platforms:
 ```
 
 ##### Claude Desktop
-**Status**: ✅ Full Support  
-**Configuration Location**: `.claude-desktop/`  
+
+**Status**: ✅ Full Support
+**Configuration Location**: `.claude-desktop/`
 **MCP Support**: ✅ via `~/Library/Application Support/Claude/claude_desktop_config.json`
 
 ```yaml
@@ -40,25 +42,27 @@ platforms:
 ```
 
 #### OpenAI Tools
-**Status**: ⚠️ Limited Support  
-**Configuration Location**: `.openai/`  
+
+**Status**: ⚠️ Limited Support
+**Configuration Location**: `.openai/`
 **Notes**: Original Codex API deprecated March 2023
 
 ```yaml
 platforms:
   openai:
     compatible: false # Deprecated
-    status: "deprecated"
-    apiVersion: "v1"
-    model: "gpt-4"
-    notes: "Use generic-ai instead"
+    status: 'deprecated'
+    apiVersion: 'v1'
+    model: 'gpt-4'
+    notes: 'Use generic-ai instead'
 ```
 
 #### GitHub Services
 
 ##### GitHub Copilot
-**Status**: ✅ Full Support  
-**Configuration Location**: `.github/copilot/`  
+
+**Status**: ✅ Full Support
+**Configuration Location**: `.github/copilot/`
 **Enterprise Support**: ✅
 
 ```yaml
@@ -71,24 +75,26 @@ platforms:
 ```
 
 #### Generic AI Tool
-**Status**: ✅ Full Support  
-**Configuration Location**: `.ai/`  
+
+**Status**: ✅ Full Support
+**Configuration Location**: `.ai/`
 **Notes**: Standard configuration for most AI coding assistants
 
 ```yaml
 platforms:
   generic-ai:
     compatible: true
-    configPath: ".ai/"
-    rulesPath: ".ai/rules/"
+    configPath: '.ai/'
+    rulesPath: '.ai/rules/'
     priority: 7 # Context priority (1-10)
 ```
 
 ### AI-First Editors
 
 #### Cursor AI
-**Status**: ✅ Full Support  
-**Configuration Location**: `.cursor/` or `.ai/rules/`  
+
+**Status**: ✅ Full Support
+**Configuration Location**: `.cursor/` or `.ai/rules/`
 **MCP Support**: ✅
 
 ```yaml
@@ -102,8 +108,9 @@ platforms:
 ```
 
 #### Windsurf (Codeium)
-**Status**: ✅ Full Support  
-**Configuration Location**: `.windsurf/`  
+
+**Status**: ✅ Full Support
+**Configuration Location**: `.windsurf/`
 **MCP Support**: ✅ via `~/.codeium/windsurf/mcp_config.json`
 
 ```yaml
@@ -117,8 +124,9 @@ platforms:
 ```
 
 #### Windsurf Next
-**Status**: ✅ Full Support  
-**Configuration Location**: `.windsurf-next/`  
+
+**Status**: ✅ Full Support
+**Configuration Location**: `.windsurf-next/`
 **MCP Support**: ✅ via `~/.codeium/windsurf-next/mcp_config.json`
 
 ```yaml
@@ -134,8 +142,9 @@ platforms:
 ### Microsoft Visual Studio Code Family
 
 #### VS Code (Stable)
-**Status**: ✅ Full Support  
-**Configuration Location**: `.vscode/`  
+
+**Status**: ✅ Full Support
+**Configuration Location**: `.vscode/`
 **MCP Support**: ✅ via `.vscode/mcp.json`
 
 ```yaml
@@ -149,8 +158,9 @@ platforms:
 ```
 
 #### VS Code Insiders
-**Status**: ✅ Full Support  
-**Configuration Location**: `.vscode-insiders/`  
+
+**Status**: ✅ Full Support
+**Configuration Location**: `.vscode-insiders/`
 **MCP Support**: ✅ via `.vscode-insiders/mcp.json`
 
 ```yaml
@@ -164,8 +174,9 @@ platforms:
 ```
 
 #### VSCodium
-**Status**: ✅ Full Support  
-**Configuration Location**: `.vscode-oss/`  
+
+**Status**: ✅ Full Support
+**Configuration Location**: `.vscode-oss/`
 **Notes**: Open source VS Code distribution
 
 ```yaml
@@ -173,7 +184,7 @@ platforms:
   vscodium:
     compatible: true
     extension: 'ai-context-schema-oss'
-    configPath: ".vscode-oss/"
+    configPath: '.vscode-oss/'
     settings: { 'aiContext.autoActivate': true }
     commands: ['aiContext.apply', 'aiContext.validate']
 ```
@@ -181,8 +192,9 @@ platforms:
 ### Modern Editors
 
 #### Zed Editor
-**Status**: ✅ Full Support  
-**Configuration Location**: `.zed/`  
+
+**Status**: ✅ Full Support
+**Configuration Location**: `.zed/`
 **Notes**: High-performance collaborative editor with AI features
 
 ```yaml
@@ -198,8 +210,9 @@ platforms:
 ### JetBrains IDEs
 
 #### General JetBrains Platform
-**Status**: ✅ Full Support  
-**Configuration Location**: `.idea/`  
+
+**Status**: ✅ Full Support
+**Configuration Location**: `.idea/`
 **MCP Support**: ✅ (2025.1+ versions)
 
 ```yaml
@@ -214,6 +227,7 @@ platforms:
 ```
 
 #### IntelliJ IDEA
+
 ```yaml
 platforms:
   intellij:
@@ -224,6 +238,7 @@ platforms:
 ```
 
 #### WebStorm
+
 ```yaml
 platforms:
   webstorm:
@@ -235,6 +250,7 @@ platforms:
 ```
 
 #### PyCharm
+
 ```yaml
 platforms:
   pycharm:
@@ -245,6 +261,7 @@ platforms:
 ```
 
 #### PHPStorm
+
 ```yaml
 platforms:
   phpstorm:
@@ -255,6 +272,7 @@ platforms:
 ```
 
 #### RubyMine
+
 ```yaml
 platforms:
   rubymine:
@@ -265,6 +283,7 @@ platforms:
 ```
 
 #### CLion
+
 ```yaml
 platforms:
   clion:
@@ -275,6 +294,7 @@ platforms:
 ```
 
 #### DataGrip
+
 ```yaml
 platforms:
   datagrip:
@@ -285,6 +305,7 @@ platforms:
 ```
 
 #### GoLand
+
 ```yaml
 platforms:
   goland:
@@ -295,6 +316,7 @@ platforms:
 ```
 
 #### Rider
+
 ```yaml
 platforms:
   rider:
@@ -305,6 +327,7 @@ platforms:
 ```
 
 #### Android Studio
+
 ```yaml
 platforms:
   android-studio:
@@ -316,19 +339,19 @@ platforms:
 
 ## Platform Feature Comparison
 
-| Platform | Memory/Context | Auto-activation | Commands | Character Limits | MCP Support | Priority System |
-|----------|---------------|-----------------|----------|------------------|-------------|----------------|
-| **Claude Code** | ✅ Memory files | ✅ Always active | ✅ Slash commands | ❌ No limits | ✅ Full | ✅ 1-10 scale |
-| **Claude Desktop** | ✅ Rules folder | ✅ Always active | ❌ Not supported | ❌ No limits | ✅ Full | ✅ 1-10 scale |
-| **Cursor** | ✅ Rule files | ✅ File patterns | ❌ Not supported | ❌ No limits | ✅ Full | ✅ High/Med/Low |
-| **Windsurf** | ✅ XML memory | ✅ Workspace | ❌ Not supported | ⚠️ 6K limit | ✅ Full | ✅ 1-10 scale |
-| **Windsurf Next** | ✅ XML memory | ✅ Workspace | ❌ Not supported | ⚠️ 6K limit | ✅ Full | ✅ 1-10 scale |
-| **GitHub Copilot** | ✅ Guidelines | ✅ Repository | ❌ Not supported | ❌ No limits | ❌ No | ✅ 1-10 scale |
-| **VS Code Family** | ✅ Settings | ✅ File patterns | ✅ Commands | ❌ No limits | ✅ Full | ✅ 1-10 scale |
-| **Zed** | ✅ Project config | ✅ Project | ✅ Commands | ❌ No limits | ❌ Planned | ✅ High/Med/Low |
-| **JetBrains IDEs** | ✅ Config files | ✅ File patterns | ✅ Actions | ❌ No limits | ✅ 2025.1+ | ✅ 1-10 scale |
-| **OpenAI** | ❌ Deprecated | ❌ Deprecated | ❌ Deprecated | ❌ Deprecated | ❌ No | ❌ Deprecated |
-| **Generic AI** | ✅ Rule files | ✅ Configurable | ✅ Configurable | ❌ No limits | ⚠️ Depends | ✅ 1-10 scale |
+| Platform           | Memory/Context    | Auto-activation  | Commands          | Character Limits | MCP Support | Priority System |
+| ------------------ | ----------------- | ---------------- | ----------------- | ---------------- | ----------- | --------------- |
+| **Claude Code**    | ✅ Memory files   | ✅ Always active | ✅ Slash commands | ❌ No limits     | ✅ Full     | ✅ 1-10 scale   |
+| **Claude Desktop** | ✅ Rules folder   | ✅ Always active | ❌ Not supported  | ❌ No limits     | ✅ Full     | ✅ 1-10 scale   |
+| **Cursor**         | ✅ Rule files     | ✅ File patterns | ❌ Not supported  | ❌ No limits     | ✅ Full     | ✅ High/Med/Low |
+| **Windsurf**       | ✅ XML memory     | ✅ Workspace     | ❌ Not supported  | ⚠️ 6K limit      | ✅ Full     | ✅ 1-10 scale   |
+| **Windsurf Next**  | ✅ XML memory     | ✅ Workspace     | ❌ Not supported  | ⚠️ 6K limit      | ✅ Full     | ✅ 1-10 scale   |
+| **GitHub Copilot** | ✅ Guidelines     | ✅ Repository    | ❌ Not supported  | ❌ No limits     | ❌ No       | ✅ 1-10 scale   |
+| **VS Code Family** | ✅ Settings       | ✅ File patterns | ✅ Commands       | ❌ No limits     | ✅ Full     | ✅ 1-10 scale   |
+| **Zed**            | ✅ Project config | ✅ Project       | ✅ Commands       | ❌ No limits     | ❌ Planned  | ✅ High/Med/Low |
+| **JetBrains IDEs** | ✅ Config files   | ✅ File patterns | ✅ Actions        | ❌ No limits     | ✅ 2025.1+  | ✅ 1-10 scale   |
+| **OpenAI**         | ❌ Deprecated     | ❌ Deprecated    | ❌ Deprecated     | ❌ Deprecated    | ❌ No       | ❌ Deprecated   |
+| **Generic AI**     | ✅ Rule files     | ✅ Configurable  | ✅ Configurable   | ❌ No limits     | ⚠️ Depends  | ✅ 1-10 scale   |
 
 ## Model Context Protocol (MCP) Support
 
@@ -344,28 +367,33 @@ The following platforms support MCP for enhanced AI context:
 ## Platform-Specific Optimizations
 
 ### Claude Code Optimizations
+
 - **Memory Hierarchy**: Organizes schemas by priority and scope
 - **Command Generation**: Creates contextual slash commands
 - **Tool Integration**: Supports MCP server integration
 - **Context Injection**: Seamless context switching
 
 ### Cursor Optimizations
+
 - **File Pattern Matching**: Intelligent auto-attachment based on file types
 - **Agent Integration**: Works with Cursor's agent system
 - **Real-time Activation**: Immediate schema application when files are opened
 
 ### Windsurf Optimizations
+
 - **Content Compression**: Intelligent truncation for character limits
 - **XML Formatting**: Structured XML for optimal parsing
 - **Workspace Awareness**: Project-level context understanding
 
 ### JetBrains Optimizations
+
 - **IDE-Specific Features**: Tailored for each JetBrains IDE
 - **File Templates**: Integration with IDE file templates
 - **Code Inspections**: Custom inspections for context validation
 - **Plugin Architecture**: Extensible through JetBrains plugin system
 
 ### Zed Optimizations
+
 - **High Performance**: Optimized for Zed's high-performance architecture
 - **Collaborative Features**: Real-time collaborative context sharing
 - **AI Integration**: Deep integration with Zed's AI features
@@ -380,6 +408,7 @@ VDK CLI automatically detects IDE usage through:
 - **Global configuration files**: User-level IDE configurations
 
 Example detection:
+
 ```bash
 # Auto-detect and initialize all IDEs in current project
 vdk init
@@ -396,16 +425,19 @@ vdk detect
 ### From Platform-Specific Formats
 
 #### From Cursor .mdc Files
+
 ```bash
 vdk migrate cursor --input .cursor/rules --output schemas/
 ```
 
 #### From JetBrains Templates
+
 ```bash
 vdk migrate jetbrains --input .idea/fileTemplates --output schemas/
 ```
 
 #### From VS Code Settings
+
 ```bash
 vdk migrate vscode --input .vscode/settings.json --output schemas/
 ```
@@ -415,18 +447,21 @@ vdk migrate vscode --input .vscode/settings.json --output schemas/
 ### Common Issues
 
 #### Schema Not Activating
+
 1. Check platform compatibility flag: `compatible: true`
 2. Verify file patterns (for auto-activation platforms)
 3. Validate schema syntax using `vdk validate`
 4. Check platform-specific requirements
 
 #### Content Truncation (Windsurf)
+
 1. Reduce schema content length
 2. Increase priority to avoid truncation
 3. Split complex schemas into smaller ones
 4. Use `characterLimit` field appropriately
 
 #### MCP Integration Issues
+
 1. Verify MCP configuration files exist
 2. Check MCP server status and logs
 3. Validate MCP server registration
