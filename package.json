@@ -30,7 +30,7 @@
   },
   "scripts": {
     "check": "pnpm run lint:all && pnpm run test && pnpm run validate-all",
-    "check-compatibility": "node validation/compatibility-checker.js",
+    "check-compatibility": "node validation/compatibility-checker.js schemas/v3.0.0/examples",
     "ci": "pnpm run check",
     "docs:serve": "markdownlint-cli2 'docs/**/*.md' 'implementations/**/*.md' 'schemas/**/*.md' '*.md' && echo 'Documentation validated'",
     "fix:all": "pnpm run lint:fix && pnpm run format",
@@ -84,7 +84,7 @@
     "husky": "^9.1.7",
     "jest": "^30.2.0",
     "jsonc-eslint-parser": "^3.1.0",
-    "lint-staged": "^16.3.1",
+    "lint-staged": "^16.3.2",
     "markdownlint-cli2": "^0.21.0",
     "oxlint": "^1.51.0",
     "rimraf": "^6.1.3",

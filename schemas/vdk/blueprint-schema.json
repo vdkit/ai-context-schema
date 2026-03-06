@@ -276,6 +276,7 @@
                     "allOf": [
                       { "$ref": "#/definitions/componentManifest" },
                       {
+                        "type": "object",
                         "properties": {
                           "tools": { "type": "array", "items": { "type": "string" } },
                           "model": { "type": "string" },
@@ -299,6 +300,7 @@
                     "allOf": [
                       { "$ref": "#/definitions/componentManifest" },
                       {
+                        "type": "object",
                         "properties": {
                           "paths": { "type": "array", "items": { "type": "string" } }
                         }
@@ -320,6 +322,7 @@
                     "allOf": [
                       { "$ref": "#/definitions/componentManifest" },
                       {
+                        "type": "object",
                         "properties": {
                           "allowedTools": { "type": "array", "items": { "type": "string" } },
                           "argumentHint": { "type": "string" }
@@ -389,6 +392,7 @@
                     "allOf": [
                       { "$ref": "#/definitions/componentManifest" },
                       {
+                        "type": "object",
                         "properties": {
                           "globs": { "type": "array", "items": { "type": "string" } },
                           "activation": {
@@ -447,6 +451,7 @@
                     "allOf": [
                       { "$ref": "#/definitions/componentManifest" },
                       {
+                        "type": "object",
                         "properties": {
                           "globs": { "type": "array", "items": { "type": "string" } },
                           "mode": { "enum": ["glob", "always"] }
@@ -469,6 +474,7 @@
                     "allOf": [
                       { "$ref": "#/definitions/componentManifest" },
                       {
+                        "type": "object",
                         "properties": {
                           "trigger": { "type": "array", "items": { "type": "string" } }
                         }

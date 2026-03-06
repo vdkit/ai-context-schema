@@ -341,7 +341,7 @@
               "type": "object",
               "properties": {
                 "type": { "const": "cursor-main" },
-                "location": { "type": "string", "default": ".cursorrules" },
+                "location": { "type": "string", "default": ".cursor/rules/main.mdc" },
                 "enabled": { "type": "boolean" }
               }
             },

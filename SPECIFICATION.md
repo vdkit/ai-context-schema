@@ -144,7 +144,7 @@ Each platform has a `components` object defining available component types:
 
 **Component Types:**
 
-- `cursor-main`: .cursorrules main file
+- `cursor-main`: canonical anchor rule in `.cursor/rules/index.mdc`
 - `cursor-rule`: MDC rules in `.cursor/rules/*.mdc`
 
 **Activation Modes:**
@@ -395,3 +395,10 @@ Each platform has specific constraints:
 - Documented `kind` as the required canonical behavioral taxonomy field
 - Clarified `category` as optional editorial grouping
 - Added canonical retrieval metadata guidance for `specificityLayer`, `equivalenceOutcome`, and `curation.status`
+
+### v3.0.2 (2026-03-03)
+
+**Specification clarifications:**
+
+- Updated Cursor `cursor-main` location guidance to canonical `.cursor/rules/index.mdc`
+- Removed deprecated `.cursorrules` default location from canonical examples
