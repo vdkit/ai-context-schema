@@ -1,11 +1,13 @@
 {
   "name": "@vdkit/ai-context-schema",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "publishConfig": {
     "access": "public"
   },
   "description": "Universal schema for defining AI assistant behavior across development platforms",
   "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@11.10.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/vdkit/ai-context-schema.git"
@@ -15,49 +17,62 @@
   "bugs": {
     "url": "https://github.com/vdkit/ai-context-schema/issues"
   },
-  "main": "validation/schema-validator.js",
+  "main": "./dist/validation/schema-validator.js",
+  "types": "./dist/validation/schema-validator.d.ts",
   "bin": {
-    "ai-context-schema": "validation/schema-validator.js"
+    "ai-context-schema": "./dist/validation/schema-validator.js"
   },
   "exports": {
-    ".": "./validation/schema-validator.js",
+    ".": {
+      "types": "./dist/validation/schema-validator.d.ts",
+      "default": "./dist/validation/schema-validator.js"
+    },
+    "./validation/compatibility-checker": {
+      "types": "./dist/validation/compatibility-checker.d.ts",
+      "default": "./dist/validation/compatibility-checker.js"
+    },
     "./schemas/vdk/blueprint-schema.json": "./schemas/vdk/blueprint-schema.json",
     "./schemas/vdk/command-schema.json": "./schemas/vdk/command-schema.json",
     "./package.json": "./package.json"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=24.0.0",
+    "pnpm": ">=11.10.0"
   },
   "scripts": {
-    "check": "pnpm run lint:all && pnpm run test && pnpm run validate-all",
-    "check-compatibility": "node validation/compatibility-checker.js schemas/v3.0.0/examples",
+    "build": "rimraf dist && tsc -p tsconfig.json",
+    "check": "pnpm run lint:all && pnpm run typecheck && pnpm run test && pnpm run validate-all",
+    "check-compatibility": "tsx validation/compatibility-checker.ts schemas/v3.0.0/examples",
     "ci": "pnpm run check",
     "docs:serve": "markdownlint-cli2 'docs/**/*.md' 'implementations/**/*.md' 'schemas/**/*.md' '*.md' && echo 'Documentation validated'",
     "fix:all": "pnpm run lint:fix && pnpm run format",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
-    "lint": "oxlint --import-plugin -c .oxlintrc.json \"lint/blueprint-lint-trigger.mjs\"",
+    "lint": "oxlint --import-plugin -c .oxlintrc.json \"lint/blueprint-lint-trigger.ts\"",
     "lint:all": "pnpm run lint && pnpm run format:check && pnpm run lint:docs",
     "lint:blueprints:dry": "vdk-blueprints-fix --target schemas/v3.0.0/examples",
     "lint:blueprints:fix": "vdk-blueprints-fix --write --target schemas/v3.0.0/examples",
     "lint:docs": "markdownlint-cli2 'docs/**/*.md' 'implementations/**/*.md' 'schemas/**/*.md' '*.md'",
     "lint:fix": "pnpm run lint:blueprints:fix && pnpm run lint",
-    "lint:js": "oxlint --import-plugin -c .oxlintrc.json \"lint/blueprint-lint-trigger.mjs\"",
+    "lint:js": "pnpm run lint",
     "prepare": "husky",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch",
-    "validate": "node validation/schema-validator.js",
-    "validate-all": "node validation/schema-validator.js schemas/v3.0.0/examples --warnings",
-    "validate-verbose": "node validation/schema-validator.js schemas/v3.0.0/examples --verbose --warnings"
+    "prepublishOnly": "pnpm run check && pnpm run build",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "validate": "tsx validation/schema-validator.ts",
+    "validate-all": "tsx validation/schema-validator.ts schemas/v3.0.0/examples --warnings",
+    "validate-verbose": "tsx validation/schema-validator.ts schemas/v3.0.0/examples --verbose --warnings"
   },
   "files": [
     "CONTRIBUTING.md",
     "docs/",
+    "dist/lint/",
+    "dist/validation/",
     "implementations/",
     "schemas/",
     "SPECIFICATION.md",
-    "validation/",
     "LICENSE",
     "README.md"
   ],
@@ -75,19 +90,25 @@
     "standardization"
   ],
   "dependencies": {
-    "ajv": "^8.18.0",
+    "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
-    "js-yaml": "^4.1.1"
+    "js-yaml": "^5.2.1"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^26.1.0",
     "@vdkit/oxlint-plugin-blueprints": "^1.0.0",
+    "@vitest/coverage-v8": "^4.1.10",
     "husky": "^9.1.7",
-    "jest": "^30.2.0",
-    "jsonc-eslint-parser": "^3.1.0",
-    "lint-staged": "^16.3.2",
-    "markdownlint-cli2": "^0.21.0",
-    "oxlint": "^1.51.0",
+    "jest": "^30.4.2",
+    "lint-staged": "^17.0.8",
+    "markdownlint-cli2": "^0.23.0",
+    "oxfmt": "^0.58.0",
+    "oxlint": "^1.73.0",
     "rimraf": "^6.1.3",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10",
     "yaml-lint": "^1.7.0"
   },
   "directories": {

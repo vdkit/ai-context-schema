@@ -35,7 +35,7 @@ We welcome contributions to the AI Context Schema specification and its ecosyste
 
 ### Prerequisites
 
-- Node.js 18+ for validation tools
+- Node.js 22+ for validation tools
 - Git for version control
 - Basic understanding of YAML and JSON Schema
 - Familiarity with AI coding assistants
@@ -48,13 +48,13 @@ git clone https://github.com/yourusername/ai-context-schema.git
 cd ai-context-schema
 
 # Install dependencies
-npm install
+pnpm install
 
 # Validate existing schemas
-npm run validate-all
+pnpm run validate-all
 
 # Run tests
-npm test
+pnpm test
 ```
 
 ## Contribution Guidelines
@@ -76,50 +76,56 @@ npm test
 id: 'your-context-id'
 title: 'Clear, Descriptive Title'
 description: 'Detailed description of what this context provides (10-500 chars)'
-schemaVersion: '3.0.0'
+schemaVersion: '3.0'
 kind: 'skill' # or command, workflow, agent, etc.
 version: '1.0.0'
 category: 'technology' # optional editorial grouping
 platforms:
   claude-code:
-    compatible: true
-    memory: true
-    command: true
-    priority: 8
-  claude-desktop:
-    compatible: true
-    mcpIntegration: true
-    rules: true
-    priority: 8
+    components:
+      skills:
+        type: 'claude-skill'
+        location: '.claude/skills/'
+        enabled: true
+        manifests:
+          - name: 'your-context-id'
+            file: 'your-context-id.md'
+            enabled: true
   cursor:
-    compatible: true
-    activation: 'auto-attached'
-    globs: ['**/*.ext']
-    priority: 'high'
+    components:
+      rules:
+        type: 'cursor-rule'
+        location: '.cursor/rules/'
+        enabled: true
+        format: 'mdc'
+        manifests:
+          - name: 'your-context-id'
+            file: 'your-context-id.mdc'
+            enabled: true
+            globs: ['**/*.ext']
+            activation: 'auto-attached'
   windsurf:
-    compatible: true
-    mode: 'workspace'
-    characterLimit: 4500
-  zed:
-    compatible: true
-    aiFeatures: true
-    performance: 'high'
-  jetbrains:
-    compatible: true
-    ide: 'webstorm' # or appropriate IDE
-    mcpIntegration: true
-    fileTemplates: true
-  vscode:
-    compatible: true
-    extension: 'ai-context-schema'
-    mcpIntegration: true
+    components:
+      rules:
+        type: 'windsurf-rule'
+        location: '.windsurf/rules/'
+        enabled: true
+        manifests:
+          - name: 'your-context-id'
+            file: 'your-context-id.md'
+            enabled: true
+            globs: ['**/*.ext']
+            mode: 'glob'
   github-copilot:
-    compatible: true
-    priority: 8
-    reviewType: 'code-quality'
+    components:
+      repo-level:
+        type: 'copilot-repo'
+        location: '.github/copilot-instructions.md'
+        enabled: true
+        constraints:
+          maxChars: 3000
   generic-ai:
-    compatible: true
-    priority: 7
+    enabled: true
 tags: ['relevant', 'searchable', 'tags']
 author: 'your-github-username'
 ---
@@ -205,7 +211,7 @@ export class ClaudeDesktopAdapter implements PlatformAdapter {
 
     for (const schema of schemas) {
       const config = schema.platforms['claude-desktop'];
-      if (!config?.compatible) continue;
+      if (config?.enabled === false) continue; // platform is "on" unless explicitly disabled
 
       // Generate rules file
       if (config.rules) {
@@ -234,7 +240,7 @@ export class JetBrainsAdapter implements PlatformAdapter {
 
     for (const schema of schemas) {
       const config = schema.platforms['jetbrains'];
-      if (!config?.compatible) continue;
+      if (config?.enabled === false) continue; // platform is "on" unless explicitly disabled
 
       // Generate IDE-specific configuration
       files[`.idea/ai-rules/${schema.id}.xml`] = this.generateIdeaConfig(schema, config);
@@ -274,7 +280,7 @@ export class ZedAdapter implements PlatformAdapter {
 
     for (const schema of schemas) {
       const config = schema.platforms['zed'];
-      if (!config?.compatible) continue;
+      if (config?.enabled === false) continue; // platform is "on" unless explicitly disabled
 
       // Generate Zed-specific configuration
       const zedConfig = {
@@ -311,7 +317,7 @@ export class VSCodeAdapter implements PlatformAdapter {
 
     for (const schema of schemas) {
       const config = schema.platforms['vscode'];
-      if (!config?.compatible) continue;
+      if (config?.enabled === false) continue; // platform is "on" unless explicitly disabled
 
       // Generate VS Code settings integration
       if (config.settings) {

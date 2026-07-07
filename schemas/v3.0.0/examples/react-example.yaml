@@ -16,80 +16,73 @@ audience: "developer"
 maturity: "stable"
 platforms:
   claude-code:
-    compatible: true
-    memory: true
-    command: true
-    namespace: "project"
-    priority: 8
-  claude-desktop:
-    compatible: true
-    mcpIntegration: true
-    rules: true
-    priority: 8
+    components:
+      skills:
+        type: "claude-skill"
+        location: ".claude/skills/"
+        enabled: true
+        manifests:
+          - name: "react-component-patterns"
+            file: "react-component-patterns.md"
+            enabled: true
+      commands:
+        type: "claude-command"
+        location: ".claude/commands/"
+        enabled: true
+        manifests:
+          - name: "react-component"
+            file: "react-component.md"
+            enabled: true
+            argumentHint: "<component-name>"
   cursor:
-    compatible: true
-    activation: "auto-attached"
-    globs: ["**/*.tsx", "**/*.jsx", "**/components/**/*.ts"]
-    priority: "high"
+    components:
+      rules:
+        type: "cursor-rule"
+        location: ".cursor/rules/"
+        enabled: true
+        format: "mdc"
+        manifests:
+          - name: "react-component-patterns"
+            file: "react-component-patterns.mdc"
+            enabled: true
+            globs: ["**/*.tsx", "**/*.jsx", "**/components/**/*.ts"]
+            activation: "auto-attached"
   windsurf:
-    compatible: true
-    mode: "workspace"
-    xmlTag: "react-context"
-    characterLimit: 4500
-  windsurf-next:
-    compatible: true
-    mode: "workspace"
-    xmlTag: "react-next-context"
-    characterLimit: 4500
-    priority: 8
+    components:
+      rules:
+        type: "windsurf-rule"
+        location: ".windsurf/rules/"
+        enabled: true
+        manifests:
+          - name: "react-component-patterns"
+            file: "react-component-patterns.md"
+            enabled: true
+            globs: ["**/*.tsx", "**/*.jsx"]
+            mode: "glob"
   github-copilot:
-    compatible: true
-    priority: 9
-    reviewType: "code-quality"
-  vscode:
-    compatible: true
-    extension: "ms-vscode.vscode-typescript-next"
-    settings:
-      "typescript.preferences.includePackageJsonAutoImports": "auto"
-    commands: ["React: Create Component"]
-  vscode-insiders:
-    compatible: true
-    extension: "ms-vscode.vscode-typescript-next"
-    mcpIntegration: true
-  vscodium:
-    compatible: true
-    configPath: ".vscode-oss/"
-    extension: "typescript-hero"
+    components:
+      repo-level:
+        type: "copilot-repo"
+        location: ".github/copilot-instructions.md"
+        enabled: true
+        constraints:
+          maxChars: 3000
   zed:
-    compatible: true
-    mode: "project"
-    aiFeatures: true
-    collaborative: true
-    performance: "high"
+    components:
+      settings:
+        type: "zed-settings"
+        location: "~/.config/zed/settings.json"
+        enabled: true
   jetbrains:
-    compatible: true
-    ide: "webstorm"
-    mcpIntegration: true
-    fileTemplates: true
-    inspections: ["ReactHooksUsage", "TypeScriptValidateTypes"]
-  webstorm:
-    compatible: true
-    nodeIntegration: true
-    typescript: true
-    plugin: "NodeJS"
-  intellij:
-    compatible: true
-    plugin: "JavaScript"
-    fileTemplates: true
-  openai:
-    compatible: false
-    status: "deprecated"
-    notes: "Use generic-ai instead"
+    components:
+      aiignore:
+        type: "aiignore"
+        location: ".aiignore"
+        enabled: true
+  openai-codex:
+    enabled: false
   generic-ai:
-    compatible: true
-    configPath: ".ai/"
-    rulesPath: ".ai/rules/"
-    priority: 7
+    enabled: true
 requires: []
 suggests: []
 conflicts: ["vue-patterns", "angular-patterns"]
@@ -335,13 +328,10 @@ const Parent = () => {
 
 ## Platform Notes
 
-- **Claude Code**: Use `/react-component` command for quick component scaffolding
-- **Claude Desktop**: MCP integration for enhanced React development workflow
-- **Cursor**: Auto-attachment works with TSX files and component directories
-- **Windsurf/Windsurf Next**: Context optimized for workspace-level React projects
-- **VS Code Family**: TypeScript integration with React IntelliSense
-- **VSCodium**: Open-source VS Code with React development support
-- **Zed**: High-performance React development with collaborative features
-- **JetBrains IDEs**: Full React support in WebStorm with advanced refactoring
-- **GitHub Copilot**: Integrated with repository-level React patterns and PR reviews
-- **Generic AI**: Standard configuration compatible with most AI coding assistants
+- **Claude Code**: Deployed as a `claude-skill` plus a `/react-component` slash command for quick component scaffolding
+- **Cursor**: Auto-attached `cursor-rule` (MDC) triggered by TSX/JSX globs and component directories
+- **Windsurf**: Glob-scoped `windsurf-rule` for React source files
+- **GitHub Copilot**: Repository-level instructions (3,000 character limit) for React patterns and PR reviews
+- **Zed**: Project settings integration for React development
+- **JetBrains IDEs**: `.aiignore` integration for WebStorm/IntelliJ
+- **Generic AI**: Platform enabled for any AI coding assistant that consumes the canonical schema

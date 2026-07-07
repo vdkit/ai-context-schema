@@ -16,88 +16,74 @@ audience: "developer"
 maturity: "stable"
 platforms:
   claude-code:
-    compatible: true
-    memory: true
-    command: true
-    namespace: "project"
-    allowedTools: ["web_search", "web_fetch"]
-    priority: 8
-  claude-desktop:
-    compatible: true
-    mcpIntegration: true
-    rules: true
-    priority: 8
+    components:
+      skills:
+        type: "claude-skill"
+        location: ".claude/skills/"
+        enabled: true
+        manifests:
+          - name: "api-development-patterns"
+            file: "api-development-patterns.md"
+            enabled: true
+      commands:
+        type: "claude-command"
+        location: ".claude/commands/"
+        enabled: true
+        manifests:
+          - name: "api-route"
+            file: "api-route.md"
+            enabled: true
+            allowedTools: ["web_search", "web_fetch"]
+            argumentHint: "<resource-name>"
   cursor:
-    compatible: true
-    activation: "auto-attached"
-    globs: ["**/routes/**/*.ts", "**/controllers/**/*.ts", "**/api/**/*.ts"]
-    priority: "high"
+    components:
+      rules:
+        type: "cursor-rule"
+        location: ".cursor/rules/"
+        enabled: true
+        format: "mdc"
+        manifests:
+          - name: "api-development-patterns"
+            file: "api-development-patterns.mdc"
+            enabled: true
+            globs: ["**/routes/**/*.ts", "**/controllers/**/*.ts", "**/api/**/*.ts"]
+            activation: "auto-attached"
   windsurf:
-    compatible: true
-    mode: "workspace"
-    xmlTag: "api-context"
-    characterLimit: 5000
-    priority: 8
-  windsurf-next:
-    compatible: true
-    mode: "workspace"
-    xmlTag: "api-next-context"
-    characterLimit: 5000
-    priority: 8
+    components:
+      rules:
+        type: "windsurf-rule"
+        location: ".windsurf/rules/"
+        enabled: true
+        manifests:
+          - name: "api-development-patterns"
+            file: "api-development-patterns.md"
+            enabled: true
+            globs: ["**/routes/**/*.ts", "**/controllers/**/*.ts", "**/api/**/*.ts"]
+            mode: "glob"
   github-copilot:
-    compatible: true
-    priority: 8
-    reviewType: "security"
-    scope: "repository"
-  vscode:
-    compatible: true
-    extension: "ms-vscode.vscode-typescript-next"
-    commands: ["REST Client", "Thunder Client"]
-  vscode-insiders:
-    compatible: true
-    extension: "ms-vscode.vscode-typescript-next"
-    mcpIntegration: true
-  vscodium:
-    compatible: true
-    configPath: ".vscode-oss/"
-    extension: "humao.rest-client"
+    components:
+      repo-level:
+        type: "copilot-repo"
+        location: ".github/copilot-instructions.md"
+        enabled: true
+        constraints:
+          maxChars: 3000
   zed:
-    compatible: true
-    mode: "project"
-    aiFeatures: true
-    performance: "high"
+    components:
+      settings:
+        type: "zed-settings"
+        location: "~/.config/zed/settings.json"
+        enabled: true
   jetbrains:
-    compatible: true
-    ide: "webstorm"
-    mcpIntegration: true
-    fileTemplates: true
-    inspections: ["NodeJSUnresolvedModule", "TypeScriptValidateTypes"]
-  webstorm:
-    compatible: true
-    nodeIntegration: true
-    typescript: true
-    plugin: "NodeJS"
-  intellij:
-    compatible: true
-    plugin: "NodeJS"
-    fileTemplates: true
-  pycharm:
-    compatible: true
-    pythonInterpreter: false
-    notes: "Limited support for TypeScript/Node.js projects"
-  datagrip:
-    compatible: true
-    databases: ["postgresql", "mysql", "mongodb"]
-    sqlDialect: "PostgreSQL"
-  openai:
-    compatible: false
-    status: "deprecated"
-    notes: "Use generic-ai instead"
+    components:
+      aiignore:
+        type: "aiignore"
+        location: ".aiignore"
+        enabled: true
+  openai-codex:
+    enabled: false
   generic-ai:
-    compatible: true
-    configPath: ".ai/"
-    rulesPath: ".ai/rules/"
-    priority: 7
+    enabled: true
 requires: []
 suggests: []
 conflicts: ["graphql-patterns"]
@@ -539,7 +525,7 @@ const sanitizeInput = (req: Request, res: Response, next: NextFunction) => {
 
 ## Platform Notes
 
-- **Claude Code**: Use `/api-route` command for route scaffolding
-- **Cursor**: Auto-activation for API-related files in routes and controllers
-- **Windsurf**: Workspace-level context for full API project understanding
-- **GitHub Copilot**: Enhanced security review integration for API endpoints
+- **Claude Code**: Deployed as a `claude-skill` plus a `/api-route` slash command for route scaffolding
+- **Cursor**: Auto-attached `cursor-rule` (MDC) for API-related files in routes and controllers
+- **Windsurf**: Glob-scoped `windsurf-rule` for full API project understanding
+- **GitHub Copilot**: Repository-level instructions (3,000 character limit) for API endpoint guidance

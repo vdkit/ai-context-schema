@@ -213,9 +213,13 @@
         "meta",
         "quality",
         "workflow",
-        "operations"
+        "operations",
+        "command",
+        "rule",
+        "skill",
+        "agent"
       ],
-      "description": "Primary category for the command"
+      "description": "Primary category for the command. Includes both editorial task categories (e.g., development, testing) and canonical artifact categories (command, rule, workflow, skill, agent) used by real command artifacts across the VDK ecosystem."
     },
     "author": {
       "type": "string",

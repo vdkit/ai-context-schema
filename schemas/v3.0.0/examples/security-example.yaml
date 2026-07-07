@@ -14,87 +14,75 @@ audience: "developer"
 maturity: "stable"
 platforms:
   claude-code:
-    compatible: true
-    memory: true
-    command: true
-    namespace: "project"
-    priority: 10
-    allowedTools: ["web_search", "web_fetch"]
-  claude-desktop:
-    compatible: true
-    mcpIntegration: true
-    rules: true
-    priority: 10
+    components:
+      main:
+        type: "claude-main"
+        location: "CLAUDE.md"
+        enabled: true
+      skills:
+        type: "claude-skill"
+        location: ".claude/skills/"
+        enabled: true
+        manifests:
+          - name: "security-practices"
+            file: "security-practices.md"
+            enabled: true
+      commands:
+        type: "claude-command"
+        location: ".claude/commands/"
+        enabled: true
+        manifests:
+          - name: "security-audit"
+            file: "security-audit.md"
+            enabled: true
+            allowedTools: ["web_search", "web_fetch"]
   cursor:
-    compatible: true
-    activation: "always"
-    priority: "high"
+    components:
+      rules:
+        type: "cursor-rule"
+        location: ".cursor/rules/"
+        enabled: true
+        format: "mdc"
+        manifests:
+          - name: "security-practices"
+            file: "security-practices.mdc"
+            enabled: true
+            activation: "always"
   windsurf:
-    compatible: true
-    mode: "workspace"
-    xmlTag: "security-context"
-    characterLimit: 6000
-    priority: 10
-  windsurf-next:
-    compatible: true
-    mode: "workspace"
-    xmlTag: "security-next-context"
-    characterLimit: 6000
-    priority: 10
+    components:
+      rules:
+        type: "windsurf-rule"
+        location: ".windsurf/rules/"
+        enabled: true
+        manifests:
+          - name: "security-practices"
+            file: "security-practices.md"
+            enabled: true
+            mode: "always"
   github-copilot:
-    compatible: true
-    priority: 10
-    reviewType: "security"
-    scope: "organization"
-  vscode:
-    compatible: true
-    extension: "ms-vscode.security-scan"
-    commands: ["Security: Scan Workspace"]
-  vscode-insiders:
-    compatible: true
-    extension: "ms-vscode.security-scan"
-    mcpIntegration: true
-  vscodium:
-    compatible: true
-    configPath: ".vscode-oss/"
+    components:
+      repo-level:
+        type: "copilot-repo"
+        location: ".github/copilot-instructions.md"
+        enabled: true
+        constraints:
+          maxChars: 3000
   zed:
-    compatible: true
-    mode: "global"
-    aiFeatures: true
-    performance: "high"
+    components:
+      settings:
+        type: "zed-settings"
+        location: "~/.config/zed/settings.json"
+        enabled: true
   jetbrains:
-    compatible: true
-    mcpIntegration: true
-    inspections: ["SecurityVulnerabilities", "SQLInjection", "XSSVulnerabilities"]
-  intellij:
-    compatible: true
-    inspections: ["SecurityVulnerabilities", "SQLInjection"]
-  webstorm:
-    compatible: true
-    nodeIntegration: true
-    inspections: ["NodeSecurityAdvisories"]
-  pycharm:
-    compatible: true
-    inspections: ["PythonSecurityVulnerabilities"]
-  phpstorm:
-    compatible: true
-    inspections: ["PhpSecurityVulnerabilities"]
-  clion:
-    compatible: true
-    inspections: ["BufferOverflow", "MemoryLeaks"]
-  datagrip:
-    compatible: true
-    inspections: ["SQLInjection", "SQLSecurityIssues"]
-  openai:
-    compatible: false
-    status: "deprecated"
-    notes: "Use generic-ai instead"
+    components:
+      aiignore:
+        type: "aiignore"
+        location: ".aiignore"
+        enabled: true
+  openai-codex:
+    enabled: false
   generic-ai:
-    compatible: true
-    configPath: ".ai/"
-    rulesPath: ".ai/rules/"
-    priority: 10
-    scope: "repository"
+    enabled: true
 requires: []
 suggests: []
 tags: ["security", "authentication", "authorization", "encryption", "owasp"]
@@ -897,7 +885,7 @@ app.use((error, req, res, next) => {
 
 ## Platform Notes
 
-- **Claude Code**: Use `/security-audit` command for security review
-- **Cursor**: Auto-activation for all files to ensure security awareness
-- **Windsurf**: High priority context for workspace-level security
-- **GitHub Copilot**: Enhanced security-focused code review and suggestions
+- **Claude Code**: Deployed as a `claude-main` memory plus a `claude-skill` and a `/security-audit` slash command for security review
+- **Cursor**: Always-on `cursor-rule` (MDC) so security awareness applies to all files
+- **Windsurf**: Always-mode `windsurf-rule` for workspace-level security
+- **GitHub Copilot**: Repository-level instructions (3,000 character limit) for security-focused review and suggestions

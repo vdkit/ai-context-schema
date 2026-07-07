@@ -13,7 +13,7 @@ This guide helps you create your first AI Context Schema and deploy it across AI
 
 - Basic understanding of YAML and Markdown
 - Familiarity with at least one AI coding assistant (Claude Code, Claude Desktop, Cursor, Windsurf, VS Code, JetBrains IDEs, Zed, or GitHub Copilot)
-- Node.js 18+ (for validation tools)
+- Node.js 22+ (for validation tools)
 
 ## Quick Start
 
@@ -21,10 +21,10 @@ This guide helps you create your first AI Context Schema and deploy it across AI
 
 ```bash
 # Install globally for command-line usage
-npm install -g ai-context-schema
+pnpm add -g @vdkit/ai-context-schema
 
-# Or use npx for one-time usage
-npx ai-context-schema --version
+# Or use pnpm dlx for one-time usage
+pnpm dlx @vdkit/ai-context-schema --help
 ```
 
 ### 2. Create Your First Schema
@@ -36,7 +36,7 @@ Create a file called `my-first-schema.yaml`:
 id: "my-react-patterns"
 title: "My React Development Patterns"
 description: "Personal React development guidelines and best practices"
-schemaVersion: "3.0.0"
+schemaVersion: "3.0"
 kind: "skill"
 version: "1.0.0"
 category: "technology"
@@ -44,40 +44,50 @@ framework: "react"
 language: "typescript"
 platforms:
   claude-code:
-    compatible: true
-    memory: true
-    command: true
-  claude-desktop:
-    compatible: true
-    mcpIntegration: true
-    rules: true
+    components:
+      skills:
+        type: "claude-skill"
+        location: ".claude/skills/"
+        enabled: true
+        manifests:
+          - name: "my-react-patterns"
+            file: "my-react-patterns.md"
+            enabled: true
   cursor:
-    compatible: true
-    activation: "auto-attached"
-    globs: ["**/*.tsx", "**/*.jsx"]
+    components:
+      rules:
+        type: "cursor-rule"
+        location: ".cursor/rules/"
+        enabled: true
+        format: "mdc"
+        manifests:
+          - name: "my-react-patterns"
+            file: "my-react-patterns.mdc"
+            enabled: true
+            globs: ["**/*.tsx", "**/*.jsx"]
+            activation: "auto-attached"
   windsurf:
-    compatible: true
-    mode: "workspace"
-    characterLimit: 4500
-  zed:
-    compatible: true
-    aiFeatures: true
-    performance: "high"
-  jetbrains:
-    compatible: true
-    ide: "webstorm"
-    mcpIntegration: true
-  vscode:
-    compatible: true
-    extension: "ai-context-schema"
-    mcpIntegration: true
+    components:
+      rules:
+        type: "windsurf-rule"
+        location: ".windsurf/rules/"
+        enabled: true
+        manifests:
+          - name: "my-react-patterns"
+            file: "my-react-patterns.md"
+            enabled: true
+            globs: ["**/*.tsx", "**/*.jsx"]
+            mode: "glob"
   github-copilot:
-    compatible: true
-    priority: 8
-    reviewType: "code-quality"
+    components:
+      repo-level:
+        type: "copilot-repo"
+        location: ".github/copilot-instructions.md"
+        enabled: true
+        constraints:
+          maxChars: 3000
   generic-ai:
-    compatible: true
-    priority: 7
+    enabled: true
 tags: ["react", "typescript", "personal"]
 author: "your-username"
 ---
@@ -185,119 +195,125 @@ Every schema MUST include these fields:
 id: 'unique-kebab-case-identifier'
 title: 'Human Readable Title'
 description: 'Detailed description of what this schema provides'
-schemaVersion: '3.0.0'
+schemaVersion: '3.0'
 kind: 'skill'
 version: '1.0.0' # Semantic versioning
 category: 'technology' # Optional editorial grouping
 platforms:
-  # At least one platform must be specified
+  # At least one platform must be specified.
+  # A platform is "on" unless it sets `enabled: false`.
   claude-code:
-    compatible: true
+    enabled: true
 ```
 
 ### Platform Configuration
 
-Each platform has specific configuration options:
+Each platform declares a `components` object (and/or an `enabled` flag). Component types are platform-specific. The legacy flat `compatible:`/`memory:` model has been removed.
 
 #### AI Assistants
 
-**Claude Code**
+**Claude Code** — component types: `claude-main`, `claude-agent`, `claude-rule`, `claude-command`, `claude-skill`, `claude-settings`
 
 ```yaml
 claude-code:
-  compatible: true
-  memory: true # Include in memory files
-  command: true # Create slash command
-  namespace: 'project' # project or user
-  priority: 8 # 1-10, higher = more important
-  mcpIntegration: true # Uses MCP servers
+  components:
+    main:
+      type: 'claude-main'
+      location: 'CLAUDE.md'
+      enabled: true
+    commands:
+      type: 'claude-command'
+      location: '.claude/commands/'
+      enabled: true
+      manifests:
+        - name: 'react-component'
+          file: 'react-component.md'
+          enabled: true
+          allowedTools: ['Read', 'Write']
+          argumentHint: '<component-name>'
 ```
 
-**Claude Desktop**
-
-```yaml
-claude-desktop:
-  compatible: true
-  mcpIntegration: true # MCP support
-  rules: true # Include in rules folder
-  priority: 8 # Context priority (1-10)
-```
-
-**Generic AI**
+**Generic AI** — enable without platform-specific components
 
 ```yaml
 generic-ai:
-  compatible: true
-  configPath: '.ai/'
-  rulesPath: '.ai/rules/'
-  priority: 7 # Context priority (1-10)
+  enabled: true
 ```
 
 #### AI-First Editors
 
-**Cursor**
+**Cursor** — component types: `cursor-main`, `cursor-rule`
 
 ```yaml
 cursor:
-  compatible: true
-  activation: 'auto-attached' # auto-attached, manual, always
-  globs: ['**/*.tsx'] # File patterns for activation
-  priority: 'high' # high, medium, low
+  components:
+    rules:
+      type: 'cursor-rule'
+      location: '.cursor/rules/'
+      enabled: true
+      format: 'mdc'
+      manifests:
+        - name: 'react-patterns'
+          file: 'react-patterns.mdc'
+          enabled: true
+          globs: ['**/*.tsx'] # required for auto-attached
+          activation: 'auto-attached' # auto-attached, agent-requested, manual, always
 ```
 
-**Windsurf**
+**Windsurf** — component types: `windsurf-rule`, `windsurf-workflow` (6,000 character content limit)
 
 ```yaml
 windsurf:
-  compatible: true
-  mode: 'workspace' # workspace or global
-  xmlTag: 'react-context' # XML wrapper tag
-  characterLimit: 4000 # Estimated content size (max 6000)
+  components:
+    rules:
+      type: 'windsurf-rule'
+      location: '.windsurf/rules/'
+      enabled: true
+      manifests:
+        - name: 'react-patterns'
+          file: 'react-patterns.md'
+          enabled: true
+          globs: ['**/*.tsx']
+          mode: 'glob' # glob or always
 ```
 
-**Zed**
+**Zed** — component type: `zed-settings`
 
 ```yaml
 zed:
-  compatible: true
-  mode: 'project' # global or project
-  aiFeatures: true # Uses Zed AI features
-  performance: 'high' # high, medium, low
+  components:
+    settings:
+      type: 'zed-settings'
+      location: '~/.config/zed/settings.json'
+      enabled: true
 ```
 
 #### Code Editors & IDEs
 
-**VS Code**
-
-```yaml
-vscode:
-  compatible: true
-  extension: 'ai-context-schema' # Required extension
-  settings: { 'aiContext.autoActivate': true }
-  mcpIntegration: true # Uses MCP servers
-```
-
-**JetBrains IDEs**
+**JetBrains IDEs** — component type: `aiignore`
 
 ```yaml
 jetbrains:
-  compatible: true
-  ide: 'webstorm' # intellij, webstorm, pycharm, etc.
-  mcpIntegration: true # 2025.1+ versions
-  fileTemplates: true
-  inspections: ['ContextSchemaValidation']
+  components:
+    aiignore:
+      type: 'aiignore'
+      location: '.aiignore'
+      enabled: true
 ```
 
 #### GitHub Services
 
-**GitHub Copilot**
+**GitHub Copilot** — component type: `copilot-repo` (3,000 character content limit)
 
 ```yaml
 github-copilot:
-  compatible: true
-  priority: 8 # 1-10 for suggestion priority
-  reviewType: 'code-quality' # security, performance, code-quality, style
-  scope: 'repository' # repository or organization
+  components:
+    repo-level:
+      type: 'copilot-repo'
+      location: '.github/copilot-instructions.md'
+      enabled: true
+      constraints:
+        maxChars: 3000
 ```
 
 ### Optional Fields
@@ -463,10 +479,27 @@ framework: 'react' # or vue, angular, etc.
 language: 'typescript'
 platforms:
   cursor:
-    globs: ['**/*.tsx', '**/*.ts', '**/components/**/*']
+    components:
+      rules:
+        type: 'cursor-rule'
+        location: '.cursor/rules/'
+        enabled: true
+        manifests:
+          - name: 'technology-name-patterns'
+            file: 'technology-name-patterns.mdc'
+            enabled: true
+            globs: ['**/*.tsx', '**/*.ts', '**/components/**/*']
+            activation: 'auto-attached'
   claude-code:
-    memory: true
-    command: true
+    components:
+      skills:
+        type: 'claude-skill'
+        location: '.claude/skills/'
+        enabled: true
+        manifests:
+          - name: 'technology-name-patterns'
+            file: 'technology-name-patterns.md'
+            enabled: true
 ```
 
 ### Language-Specific Schema
@@ -479,9 +512,28 @@ category: 'language'
 language: 'typescript'
 platforms:
   cursor:
-    globs: ['**/*.ts', '**/*.tsx']
+    components:
+      rules:
+        type: 'cursor-rule'
+        location: '.cursor/rules/'
+        enabled: true
+        manifests:
+          - name: 'language-name-conventions'
+            file: 'language-name-conventions.mdc'
+            enabled: true
+            globs: ['**/*.ts', '**/*.tsx']
+            activation: 'auto-attached'
   windsurf:
-    mode: 'workspace'
+    components:
+      rules:
+        type: 'windsurf-rule'
+        location: '.windsurf/rules/'
+        enabled: true
+        manifests:
+          - name: 'language-name-conventions'
+            file: 'language-name-conventions.md'
+            enabled: true
+            mode: 'glob'
 ```
 
 ### Project-Specific Schema
@@ -494,10 +546,19 @@ category: 'project'
 scope: 'project'
 platforms:
   claude-code:
-    memory: true
-    namespace: 'project'
+    components:
+      main:
+        type: 'claude-main'
+        location: 'CLAUDE.md'
+        enabled: true
   github-copilot:
-    scope: 'repository'
+    components:
+      repo-level:
+        type: 'copilot-repo'
+        location: '.github/copilot-instructions.md'
+        enabled: true
+        constraints:
+          maxChars: 3000
 ```
 
 ### Task-Specific Schema
@@ -510,9 +571,26 @@ category: 'task'
 scope: 'project'
 platforms:
   cursor:
-    activation: 'agent-requested' # Only when explicitly requested
+    components:
+      rules:
+        type: 'cursor-rule'
+        location: '.cursor/rules/'
+        enabled: true
+        manifests:
+          - name: 'testing-strategy'
+            file: 'testing-strategy.mdc'
+            enabled: true
+            activation: 'agent-requested' # Only when explicitly requested
   claude-code:
-    command: true # Available as slash command
+    components:
+      commands:
+        type: 'claude-command'
+        location: '.claude/commands/'
+        enabled: true
+        manifests:
+          - name: 'test'
+            file: 'test.md'
+            enabled: true
 ```
 
 ## Advanced Features
@@ -578,8 +656,8 @@ Error: ID must be kebab-case
 **Missing required platforms**
 
 ```bash
-Error: At least one platform must be compatible
-✅ Fix: Set compatible: true for at least one platform
+Error: platforms must have at least one platform (minProperties)
+✅ Fix: Add at least one enabled platform, e.g. `generic-ai: { enabled: true }`
 ```
 
 **Invalid version format**

@@ -104,7 +104,7 @@ A repository is considered complete for rollout only when all of the following a
 - Treat `ai-context-schema` as canonical source of truth.
 - When contract changes, update all three in one sequence:
   1. schema (`context-schema.json`)
-  2. validator (`validation/schema-validator.js`)
+  2. validator (`validation/schema-validator.ts` / published `dist/validation/schema-validator.js`)
   3. plugin/fixer (`@vdk/oxlint-plugin-blueprints`)
 - Re-run full checks after each sync step.
 

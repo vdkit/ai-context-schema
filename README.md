@@ -60,36 +60,50 @@ version: "1.0.0"
 category: "technology"
 platforms:
   claude-code:
-    compatible: true
-    memory: true
-    command: true
-  claude-desktop:
-    compatible: true
-    mcpIntegration: true
-    rules: true
+    components:
+      skills:
+        type: "claude-skill"
+        location: ".claude/skills/"
+        enabled: true
+        manifests:
+          - name: "react-patterns"
+            file: "react-patterns.md"
+            enabled: true
   cursor:
-    compatible: true
-    activation: "auto-attached"
-    globs: ["**/*.tsx", "**/*.jsx"]
+    components:
+      rules:
+        type: "cursor-rule"
+        location: ".cursor/rules/"
+        enabled: true
+        format: "mdc"
+        manifests:
+          - name: "react-patterns"
+            file: "react-patterns.mdc"
+            enabled: true
+            globs: ["**/*.tsx", "**/*.jsx"]
+            activation: "auto-attached"
   windsurf:
-    compatible: true
-    mode: "workspace"
-    characterLimit: 4500
-  zed:
-    compatible: true
-    aiFeatures: true
-    performance: "high"
-  jetbrains:
-    compatible: true
-    ide: "webstorm"
-    mcpIntegration: true
+    components:
+      rules:
+        type: "windsurf-rule"
+        location: ".windsurf/rules/"
+        enabled: true
+        manifests:
+          - name: "react-patterns"
+            file: "react-patterns.md"
+            enabled: true
+            globs: ["**/*.tsx", "**/*.jsx"]
+            mode: "glob"
   github-copilot:
-    compatible: true
-    priority: 8
-    reviewType: "code-quality"
+    components:
+      repo-level:
+        type: "copilot-repo"
+        location: ".github/copilot-instructions.md"
+        enabled: true
+        constraints:
+          maxChars: 3000
   generic-ai:
-    compatible: true
-    priority: 7
+    enabled: true
 ---
 
 # React Development Guidelines
@@ -110,16 +124,16 @@ Platform adapters transform schemas into platform-specific formats while preserv
 
 ```bash
 # Install validation tools
-npm install -g ai-context-schema
+pnpm add -g @vdkit/ai-context-schema
 
-# Validate a schema
-ai-context-schema validate my-schema.yaml
+# Validate a schema file
+ai-context-schema my-schema.yaml
 
-# Validate all examples
-ai-context-schema validate-all
+# Validate a directory of schema files
+ai-context-schema schemas/v3.0.0/examples --warnings
 
 # Check platform compatibility
-ai-context-schema check-compatibility schemas/
+pnpm exec tsx validation/compatibility-checker.ts schemas/
 ```
 
 ## Schema Structure
@@ -156,121 +170,112 @@ Optional retrieval metadata used by curated inventories:
 
 ### Platform Configuration
 
-Each platform has specific configuration options. Here are examples for key platforms:
+Each platform declares a `components` object (and/or an `enabled` flag). A platform is "on" unless it sets `enabled: false`; presence of a `components` object implies it is active. The legacy flat `compatible:`/`memory:` model has been removed.
 
 #### AI Assistants
 
-**Claude Code**
+**Claude Code** — component types: `claude-main`, `claude-agent`, `claude-rule`, `claude-command`, `claude-skill`, `claude-settings`
 
 ```yaml
 claude-code:
-  compatible: true
-  memory: true # Include in memory files
-  command: true # Enable as slash command
-  namespace: 'project' # project or user scope
-  priority: 8 # Memory hierarchy (1-10)
-  mcpIntegration: true # Uses MCP servers
+  components:
+    main:
+      type: 'claude-main'
+      location: 'CLAUDE.md'
+      enabled: true
+    commands:
+      type: 'claude-command'
+      location: '.claude/commands/'
+      enabled: true
+      manifests:
+        - name: 'react-component'
+          file: 'react-component.md'
+          enabled: true
+          allowedTools: ['Read', 'Write']
+          argumentHint: '<component-name>'
 ```
 
-**Claude Desktop**
-
-```yaml
-claude-desktop:
-  compatible: true
-  mcpIntegration: true # MCP support
-  rules: true # Include in rules folder
-  priority: 8 # Context priority (1-10)
-```
-
-**Generic AI** (Universal format)
+**Generic AI** (Universal format) — enable without platform-specific components
 
 ```yaml
 generic-ai:
-  compatible: true
-  configPath: '.ai/'
-  rulesPath: '.ai/rules/'
-  priority: 7 # Context priority (1-10)
+  enabled: true
 ```
 
 #### AI-First Editors
 
-**Cursor**
+**Cursor** — component types: `cursor-main`, `cursor-rule`
 
 ```yaml
 cursor:
-  compatible: true
-  activation: 'auto-attached' # auto-attached, manual, always
-  globs: ['**/*.tsx'] # File patterns for activation
-  priority: 'high' # high, medium, low
+  components:
+    rules:
+      type: 'cursor-rule'
+      location: '.cursor/rules/'
+      enabled: true
+      format: 'mdc'
+      manifests:
+        - name: 'react-patterns'
+          file: 'react-patterns.mdc'
+          enabled: true
+          globs: ['**/*.tsx'] # required for auto-attached
+          activation: 'auto-attached' # auto-attached, agent-requested, manual, always
 ```
 
-**Windsurf**
+**Windsurf** — component types: `windsurf-rule`, `windsurf-workflow` (6,000 character content limit)
 
 ```yaml
 windsurf:
-  compatible: true
-  mode: 'workspace' # workspace or global
-  xmlTag: 'context' # XML wrapper tag
-  characterLimit: 4500 # Content size estimate
+  components:
+    rules:
+      type: 'windsurf-rule'
+      location: '.windsurf/rules/'
+      enabled: true
+      manifests:
+        - name: 'react-patterns'
+          file: 'react-patterns.md'
+          enabled: true
+          globs: ['**/*.tsx']
+          mode: 'glob' # glob or always
 ```
 
-#### Modern Editors
+#### Modern Editors / IDEs
 
-**Zed Editor**
+**Zed Editor** — component type: `zed-settings`
 
 ```yaml
 zed:
-  compatible: true
-  mode: 'project' # global or project
-  aiFeatures: true # Uses Zed AI features
-  collaborative: true # Supports collaborative features
-  performance: 'high' # high, medium, low
+  components:
+    settings:
+      type: 'zed-settings'
+      location: '~/.config/zed/settings.json'
+      enabled: true
 ```
 
-**VS Code Family**
-
-```yaml
-vscode:
-  compatible: true
-  extension: 'ai-context-schema' # Required extension
-  settings: { 'aiContext.autoActivate': true }
-  commands: ['aiContext.apply', 'aiContext.validate']
-  mcpIntegration: true
-```
-
-#### JetBrains IDEs
-
-**General JetBrains**
+**JetBrains IDEs** — component type: `aiignore`
 
 ```yaml
 jetbrains:
-  compatible: true
-  ide: 'webstorm' # intellij, webstorm, pycharm, etc.
-  mcpIntegration: true # 2025.1+ versions
-  fileTemplates: true
-  inspections: ['ContextSchemaValidation']
-```
-
-**WebStorm**
-
-```yaml
-webstorm:
-  compatible: true
-  nodeIntegration: true # Node.js integration
-  typescript: true # TypeScript support
-  inspections: ['JavaScriptPatterns', 'TypeScriptPatterns']
+  components:
+    aiignore:
+      type: 'aiignore'
+      location: '.aiignore'
+      enabled: true
 ```
 
 #### GitHub Services
 
-**GitHub Copilot**
+**GitHub Copilot** — component type: `copilot-repo` (3,000 character content limit)
 
 ```yaml
 github-copilot:
-  compatible: true
-  priority: 8 # Suggestion priority (1-10)
-  reviewType: 'security' # security, performance, code-quality, style
-  scope: 'repository' # repository or organization
+  components:
+    repo-level:
+      type: 'copilot-repo'
+      location: '.github/copilot-instructions.md'
+      enabled: true
+      constraints:
+        maxChars: 3000
 ```
 
 ### Schema Relationships

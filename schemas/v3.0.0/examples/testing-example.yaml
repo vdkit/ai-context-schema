@@ -14,94 +14,77 @@ audience: "developer"
 maturity: "stable"
 platforms:
   claude-code:
-    compatible: true
-    memory: true
-    command: true
-    namespace: "project"
-    priority: 7
-  claude-desktop:
-    compatible: true
-    mcpIntegration: true
-    rules: true
-    priority: 7
+    components:
+      skills:
+        type: "claude-skill"
+        location: ".claude/skills/"
+        enabled: true
+        manifests:
+          - name: "testing-strategy-patterns"
+            file: "testing-strategy-patterns.md"
+            enabled: true
+      commands:
+        type: "claude-command"
+        location: ".claude/commands/"
+        enabled: true
+        manifests:
+          - name: "test"
+            file: "test.md"
+            enabled: true
+            argumentHint: "<target-path>"
   cursor:
-    compatible: true
-    activation: "auto-attached"
-    globs: ["**/{test,spec,__tests__}/**/*.{ts,js,tsx,jsx}", "**/*.{test,spec}.{ts,js,tsx,jsx}"]
-    priority: "high"
+    components:
+      rules:
+        type: "cursor-rule"
+        location: ".cursor/rules/"
+        enabled: true
+        format: "mdc"
+        manifests:
+          - name: "testing-strategy-patterns"
+            file: "testing-strategy-patterns.mdc"
+            enabled: true
+            globs:
+              - "**/{test,spec,__tests__}/**/*.{ts,js,tsx,jsx}"
+              - "**/*.{test,spec}.{ts,js,tsx,jsx}"
+            activation: "auto-attached"
   windsurf:
-    compatible: true
-    mode: "workspace"
-    xmlTag: "testing-context"
-    characterLimit: 5500
-    priority: 7
-  windsurf-next:
-    compatible: true
-    mode: "workspace"
-    xmlTag: "testing-next-context"
-    characterLimit: 5500
-    priority: 7
+    components:
+      rules:
+        type: "windsurf-rule"
+        location: ".windsurf/rules/"
+        enabled: true
+        manifests:
+          - name: "testing-strategy-patterns"
+            file: "testing-strategy-patterns.md"
+            enabled: true
+            globs:
+              - "**/{test,spec,__tests__}/**/*.{ts,js,tsx,jsx}"
+              - "**/*.{test,spec}.{ts,js,tsx,jsx}"
+            mode: "glob"
   github-copilot:
-    compatible: true
-    priority: 9
-    reviewType: "code-quality"
-    scope: "repository"
-  vscode:
-    compatible: true
-    extension: "ms-vscode.test-adapter-converter"
-    commands: ["Test: Run All Tests", "Test: Debug All Tests"]
-  vscode-insiders:
-    compatible: true
-    extension: "ms-vscode.test-adapter-converter"
-    mcpIntegration: true
-  vscodium:
-    compatible: true
-    configPath: ".vscode-oss/"
-    extension: "hbenl.vscode-test-explorer"
+    components:
+      repo-level:
+        type: "copilot-repo"
+        location: ".github/copilot-instructions.md"
+        enabled: true
+        constraints:
+          maxChars: 3000
   zed:
-    compatible: true
-    mode: "project"
-    aiFeatures: true
-    performance: "high"
+    components:
+      settings:
+        type: "zed-settings"
+        location: "~/.config/zed/settings.json"
+        enabled: true
   jetbrains:
-    compatible: true
-    mcpIntegration: true
-    fileTemplates: true
-    inspections: ["TestMethodWithoutAssertion", "JUnit5AssertionsConverter"]
-  webstorm:
-    compatible: true
-    nodeIntegration: true
-    typescript: true
-    inspections: ["JSTestFailures"]
-  intellij:
-    compatible: true
-    plugin: "JUnit"
-    inspections: ["TestMethodWithoutAssertion"]
-  pycharm:
-    compatible: true
-    pythonInterpreter: true
-    inspections: ["PyTestParametrized", "PyUnresolvedReferences"]
-  phpstorm:
-    compatible: true
-    inspections: ["PhpUnitTestsInspection"]
-  clion:
-    compatible: true
-    inspections: ["GoogleTestInspection"]
-  rider:
-    compatible: true
-    inspections: ["NUnitTestInspection", "XUnitTestInspection"]
-  android-studio:
-    compatible: true
-    inspections: ["AndroidLintInspection", "EspressoInspection"]
-  openai:
-    compatible: false
-    status: "deprecated"
-    notes: "Use generic-ai instead"
+    components:
+      aiignore:
+        type: "aiignore"
+        location: ".aiignore"
+        enabled: true
+  openai-codex:
+    enabled: false
   generic-ai:
-    compatible: true
-    configPath: ".ai/"
-    rulesPath: ".ai/rules/"
-    priority: 7
+    enabled: true
 requires: []
 suggests: []
 tags: ["testing", "jest", "cypress", "playwright", "quality-assurance"]
@@ -699,7 +682,7 @@ test('should calculate user discount based on membership level', () => {
 
 ## Platform Notes
 
-- **Claude Code**: Use `/test` command for generating test scaffolding
-- **Cursor**: Auto-activation works with test files in standard locations
-- **Windsurf**: Context optimized for workspace-level testing strategy
-- **GitHub Copilot**: Enhanced code review for test coverage and quality
+- **Claude Code**: Deployed as a `claude-skill` plus a `/test` slash command for generating test scaffolding
+- **Cursor**: Auto-attached `cursor-rule` (MDC) for test files in standard locations
+- **Windsurf**: Glob-scoped `windsurf-rule` for workspace-level testing strategy
+- **GitHub Copilot**: Repository-level instructions (3,000 character limit) for test coverage and quality
