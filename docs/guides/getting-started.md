@@ -601,13 +601,13 @@ Build complex schemas from simpler ones:
 
 ```yaml
 # Base schema
-id: "typescript-base"
+id: 'typescript-base'
 requires: []
 
 # Extended schema
-id: "react-typescript"
-requires: ["typescript-base"]
-suggests: ["react-testing"]
+id: 'react-typescript'
+requires: ['typescript-base']
+suggests: ['react-testing']
 ```
 
 ### Conditional Logic

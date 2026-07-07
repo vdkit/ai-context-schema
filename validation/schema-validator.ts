@@ -123,8 +123,8 @@ export function getPlatformComponents(config: PlatformConfig): PlatformComponent
     return [];
   }
 
-  return Object.values(config.components).filter(
-    (component): component is PlatformComponent => isRecord(component)
+  return Object.values(config.components).filter((component): component is PlatformComponent =>
+    isRecord(component)
   );
 }
 
