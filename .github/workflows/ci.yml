@@ -10,7 +10,7 @@ on:
     - cron: '0 2 * * 1'
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: '24.19.0'
 
 jobs:
   validate-schemas:

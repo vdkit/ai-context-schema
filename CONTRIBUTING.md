@@ -35,7 +35,7 @@ We welcome contributions to the AI Context Schema specification and its ecosyste
 
 ### Prerequisites
 
-- Node.js 22+ for validation tools
+- Node.js 24.19.0+ for validation tools
 - Git for version control
 - Basic understanding of YAML and JSON Schema
 - Familiarity with AI coding assistants

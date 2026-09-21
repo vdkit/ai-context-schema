@@ -4,7 +4,7 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { Ajv, type ErrorObject, type ValidateFunction } from 'ajv';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 
 import schemaDefinition from '../schemas/vdk/blueprint-schema.json' with { type: 'json' };
 
@@ -167,7 +167,10 @@ async function collectSchemaFiles(directory: string): Promise<string[]> {
       continue;
     }
 
-    if (entry.isFile() && (entry.name.endsWith('.yaml') || entry.name.endsWith('.yml'))) {
+    if (
+      entry.isFile() &&
+      ['.yaml', '.yml', '.md', '.mdc'].includes(path.extname(entry.name).toLowerCase())
+    ) {
       schemaFiles.push(fullPath);
     }
   }
@@ -396,6 +399,18 @@ export class SchemaValidator {
     const components = getPlatformComponents(config);
     const estimatedContentChars = this.estimateContentChars(schema);
 
+    for (const component of components) {
+      const maxChars = component.constraints?.maxChars;
+      if (typeof maxChars === 'number' && estimatedContentChars > maxChars) {
+        errors.push({
+          type: 'character_limit_exceeded',
+          severity: 'warning',
+          path: `platforms.${platform}.components`,
+          message: `Content (estimated ${estimatedContentChars} chars) exceeds the declared component limit (${maxChars})`
+        });
+      }
+    }
+
     switch (platform) {
       case 'cursor': {
         // Auto-attached Cursor rules require glob patterns to scope activation.
@@ -418,38 +433,6 @@ export class SchemaValidator {
         break;
       }
 
-      case 'windsurf': {
-        // Windsurf imposes a hard 6,000 character total limit on its rule content.
-        if (estimatedContentChars > 6000) {
-          errors.push({
-            type: 'character_limit_exceeded',
-            severity: 'warning',
-            path: `platforms.${platform}.components`,
-            message: `Content (estimated ${estimatedContentChars} chars) exceeds Windsurf maximum (6000)`
-          });
-        }
-        break;
-      }
-
-      case 'github-copilot': {
-        // GitHub Copilot repo-level instructions are limited to 3,000 characters.
-        for (const component of components) {
-          if (component.type !== 'copilot-repo') {
-            continue;
-          }
-
-          const maxChars = component.constraints?.maxChars ?? 3000;
-          if (estimatedContentChars > maxChars) {
-            errors.push({
-              type: 'character_limit_exceeded',
-              severity: 'warning',
-              path: `platforms.${platform}.components`,
-              message: `Content (estimated ${estimatedContentChars} chars) exceeds GitHub Copilot limit (${maxChars})`
-            });
-          }
-        }
-        break;
-      }
     }
 
     return errors;

@@ -13,7 +13,7 @@ This guide helps you create your first AI Context Schema and deploy it across AI
 
 - Basic understanding of YAML and Markdown
 - Familiarity with at least one AI coding assistant (Claude Code, Claude Desktop, Cursor, Windsurf, VS Code, JetBrains IDEs, Zed, or GitHub Copilot)
-- Node.js 22+ (for validation tools)
+- Node.js 24.19.0+ (for validation tools)
 
 ## Quick Start
 

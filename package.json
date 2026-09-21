@@ -7,7 +7,7 @@
   "description": "Universal schema for defining AI assistant behavior across development platforms",
   "license": "MIT",
   "type": "module",
-  "packageManager": "pnpm@11.10.0",
+  "packageManager": "pnpm@11.20.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/vdkit/ai-context-schema.git"
@@ -36,8 +36,8 @@
     "./package.json": "./package.json"
   },
   "engines": {
-    "node": ">=24.0.0",
-    "pnpm": ">=11.10.0"
+    "node": ">=24.19.0",
+    "pnpm": ">=11.20.0"
   },
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.json",

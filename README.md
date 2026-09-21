@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/ai-context-schema.svg)](https://badge.fury.io/js/ai-context-schema)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D22.0.0-brightgreen.svg)](https://nodejs.org/)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D24.19.0-brightgreen.svg)](https://nodejs.org/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16788626.svg)](https://doi.org/10.5281/zenodo.16788626)
 
 **Universal AI Context Schema: A New Interoperability Standard for AI Development Tools**
@@ -509,8 +509,8 @@ Current major version: **3.0** (specification patch updates may apply, see `SPEC
 
 ## Requirements
 
-- Node.js >= 22.0.0
-- npm >= 8.0.0 or pnpm >= 7.0.0
+- Node.js >= 24.19.0
+- npm >= 8.0.0 or pnpm >= 11.20.0
 
 ## License
 

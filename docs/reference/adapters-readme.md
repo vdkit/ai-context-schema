@@ -28,7 +28,7 @@ This directory contains community-contributed platform adapters for AI Context S
 
 1. **Create adapter directory**:
 
-   ```
+   ```tree
    implementations/adapters/your-platform/
    ├── README.md
    ├── src/

@@ -40,7 +40,7 @@ By the end of this tutorial, you'll have:
 
 ## Prerequisites
 
-- Node.js 18+ installed
+- Node.js 24.19.0+ installed
 - At least one AI coding assistant configured
 - Basic familiarity with YAML and Markdown
 

@@ -55,7 +55,7 @@ Platform adapters translate AI Context Schema YAML files to platform-specific co
 
 Each adapter should be in its own subdirectory with:
 
-```
+```tree
 adapters/
 ├── claude-code/
 │   ├── README.md
