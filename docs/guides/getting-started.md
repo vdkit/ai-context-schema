@@ -715,9 +715,9 @@ Study the example schemas in this repository:
 
 ### Advanced Topics
 
-- [Platform Support Guide](platform-support.md) - Deep dive into platform-specific features
+- [Platform Support Guide](../reference/platform-support.md) - Deep dive into platform-specific features
 - [Migration Guide](migration-guide.md) - Migrate from existing AI configurations
-- [Contributing Guide](../CONTRIBUTING.md) - How to contribute to the project
+- [Contributing Guide](../../CONTRIBUTING.md) - How to contribute to the project
 
 ### Build Your Schema Library
 

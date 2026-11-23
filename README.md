@@ -1,6 +1,6 @@
 # AI Context Schema
 
-[![npm version](https://badge.fury.io/js/ai-context-schema.svg)](https://badge.fury.io/js/ai-context-schema)
+[![npm version](https://img.shields.io/npm/v/@vdkit/ai-context-schema.svg)](https://www.npmjs.com/package/@vdkit/ai-context-schema)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D24.19.0-brightgreen.svg)](https://nodejs.org/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16788626.svg)](https://doi.org/10.5281/zenodo.16788626)

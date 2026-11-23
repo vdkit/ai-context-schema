@@ -508,5 +508,3 @@ vdk detect
 # Validate configuration
 vdk validate
 ```
-
-For more detailed information about each platform, refer to the comprehensive [SUPPORTED_IDES_AND_AI_TOOLS.md](../../SUPPORTED_IDES_AND_AI_TOOLS.md) document.

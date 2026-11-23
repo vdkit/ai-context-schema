@@ -497,7 +497,7 @@ Ready to eliminate AI assistant configuration fragmentation? Here's how to begin
 ### 1. Explore the Repository
 
 ```bash
-git clone https://github.com/ai-context-schema/ai-context-schema.git
+git clone https://github.com/vdkit/ai-context-schema.git
 cd ai-context-schema
 npm install
 ```
@@ -546,7 +546,7 @@ AI Context Schema isn't just a technical solution—it's a movement toward inter
 
 The fragmentation problem is solved. Now we need ecosystem adoption.
 
-**Repository:** <https://github.com/ai-context-schema/ai-context-schema>  
+**Repository:** <https://github.com/vdkit/ai-context-schema>  
 **Reference Implementation:** <https://vdk.tools>  
 **Documentation:** <https://ai-context-schema.org> (coming soon)
 

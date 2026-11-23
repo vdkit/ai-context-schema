@@ -251,7 +251,7 @@ We're open-sourcing AI Context Schema with a complete ecosystem:
 - **Migration utilities** for existing configurations
 - **Community guidelines** for contribution and adoption
 
-**Repository:** <https://github.com/ai-context-schema/ai-context-schema>  
+**Repository:** <https://github.com/vdkit/ai-context-schema>  
 **Reference Implementation:** <https://vdk.tools>
 
 ### Community Building
@@ -292,4 +292,4 @@ The fragmentation problem is solved. The standard exists. The tools work.
 
 *AI Context Schema represents more than a technical solution—it's a movement toward mature, interoperable AI tooling. Every team that adopts universal standards makes the ecosystem better for everyone.*
 
-*Ready to eliminate AI configuration fragmentation? Start here: <https://github.com/ai-context-schema/ai-context-schema>*
+*Ready to eliminate AI configuration fragmentation? Start here: <https://github.com/vdkit/ai-context-schema>*

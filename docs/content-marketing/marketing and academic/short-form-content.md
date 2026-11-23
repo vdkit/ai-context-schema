@@ -21,7 +21,7 @@ We have an AI assistant configuration fragmentation problem. (1/7)"
 
 - "The schema handles platform differences intelligently. Cursor gets file patterns, Windsurf respects character limits, Claude gets slash commands. Same intent, platform-optimized output." (6/7)
 
-- "Repository: <https://github.com/ai-context-schema/ai-context-schema>
+- "Repository: <https://github.com/vdkit/ai-context-schema>
 VDK (reference implementation): <https://vdk.tools>
 Time to standardize AI context. 🚀" (7/7)
 
@@ -63,7 +63,7 @@ AI Context Schema is that standard. VDK proves it works at scale."
 
 We need platform adapters for VS Code, IntelliJ, Vim, and more emerging AI coding tools.
 
-Help build the universal standard for AI context: <https://github.com/ai-context-schema/ai-context-schema>
+Help build the universal standard for AI context: <https://github.com/vdkit/ai-context-schema>
 
 Contributors welcome! 🤝"
 
@@ -119,7 +119,7 @@ The solution: AI Context Schema - a JSON Schema-based specification with intelli
 
 We're open-sourcing this as an industry standard. The fragmentation problem is solved - now we need ecosystem adoption.
 
-Repository: <https://github.com/ai-context-schema/ai-context-schema>
+Repository: <https://github.com/vdkit/ai-context-schema>
 
 # TechnicalInnovation #OpenSource #DeveloperTools #AI
 
@@ -157,7 +157,7 @@ platforms:
 
 We're open-sourcing this because fragmentation hurts everyone. Standards enable innovation.
 
-GitHub: <https://github.com/ai-context-schema/ai-context-schema>
+GitHub: <https://github.com/vdkit/ai-context-schema>
 
 Thoughts on AI tool standardization?
 
@@ -177,7 +177,7 @@ Built this while solving configuration fragmentation for our AI coding tools.
 **Why it matters:**
 AI coding assistants are becoming essential, but each has different config formats. This creates vendor lock-in and maintenance overhead.
 
-**Demo:** <https://github.com/ai-context-schema/ai-context-schema>
+**Demo:** <https://github.com/vdkit/ai-context-schema>
 
 The reference implementation (VDK) shows this working in production. Now open-sourcing as a standard.
 
@@ -202,7 +202,7 @@ AI Context Schema solves this with a universal format that deploys to any platfo
 **Reference implementation:** VDK CLI with full ecosystem
 **Validation:** Complete schema validation and compatibility checking
 
-Repository: <https://github.com/ai-context-schema/ai-context-schema>
+Repository: <https://github.com/vdkit/ai-context-schema>
 
 This feels like the JSON Schema moment for AI context definition. Standards enable ecosystem growth.
 
@@ -234,7 +234,7 @@ Interesting technical challenge we solved while building VDK: how do you create 
 
 Open-sourcing this as AI Context Schema because fragmentation hurts ecosystem growth.
 
-Technical details: <https://github.com/ai-context-schema/ai-context-schema>
+Technical details: <https://github.com/vdkit/ai-context-schema>
 
 Anyone else solving similar standardization challenges in emerging tech categories?
 
@@ -268,7 +268,7 @@ While building our dev tools, we created a universal schema that works across Cu
 
 Same AI context, deployed everywhere automatically. 109+ working schemas prove it scales.
 
-Open-sourcing this as AI Context Schema. Would love Cursor community feedback on the approach: <https://github.com/ai-context-schema/ai-context-schema>
+Open-sourcing this as AI Context Schema. Would love Cursor community feedback on the approach: <https://github.com/vdkit/ai-context-schema>
 
 Thoughts on universal AI configuration standards?"
 
@@ -278,7 +278,7 @@ Thoughts on universal AI configuration standards?"
 
 We went from 4 different configs to 1 universal schema. Now open-sourcing the solution: AI Context Schema.
 
-Define once, deploy everywhere. Repository: <https://github.com/ai-context-schema/ai-context-schema>
+Define once, deploy everywhere. Repository: <https://github.com/vdkit/ai-context-schema>
 
 Worth exploring if you're dealing with configuration fragmentation!"
 
