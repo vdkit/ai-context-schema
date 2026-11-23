@@ -1,6 +1,6 @@
 # Platform Support
 
-AI Context Schema is designed to work across multiple AI coding assistant platforms and IDEs. This document details the current platform support, integration methods, and platform-specific considerations based on the comprehensive list from [SUPPORTED_IDES_AND_AI_TOOLS.md](../../SUPPORTED_IDES_AND_AI_TOOLS.md).
+AI Context Schema is designed to work across multiple AI coding assistant platforms and IDEs. This document details the current platform support, integration methods, and platform-specific considerations.
 
 ## Supported Platforms
 
