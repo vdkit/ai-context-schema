@@ -4,7 +4,7 @@ This directory contains community-contributed platform adapters for AI Context S
 
 ## Available Adapters
 
-Platform adapters translate AI Context Schema YAML files to platform-specific configuration formats. Based on the [SUPPORTED_IDES_AND_AI_TOOLS.md](../../SUPPORTED_IDES_AND_AI_TOOLS.md), the following adapters are prioritized:
+Platform adapters translate AI Context Schema YAML files to platform-specific configuration formats. Based on the [platform support reference](../../docs/reference/platform-support.md), the following adapters are prioritized:
 
 ### AI Assistants & Services
 
@@ -251,7 +251,5 @@ npm run perf-test platform-name large-schema-set/
 
 For adapter development support:
 
-- 📖 [Documentation](https://github.com/your-repo/ai-context-schema/docs)
-- 🐛 [Report Issues](https://github.com/your-repo/ai-context-schema/issues)
-- 💬 [Community Discussions](https://github.com/your-repo/ai-context-schema/discussions)
-- 🛠️ [Development Guide](../../docs/guides/adapter-development.md)
+- 📖 [Documentation](https://github.com/vdkit/ai-context-schema/tree/main/docs)
+- 🐛 [Report Issues](https://github.com/vdkit/ai-context-schema/issues)

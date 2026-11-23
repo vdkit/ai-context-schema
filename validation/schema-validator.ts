@@ -432,7 +432,6 @@ export class SchemaValidator {
         }
         break;
       }
-
     }
 
     return errors;

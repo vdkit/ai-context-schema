@@ -10,7 +10,7 @@ on:
     - cron: '0 2 * * 1'
 
 env:
-  NODE_VERSION: '24.19.0'
+  NODE_VERSION: '26.13.1'
 
 jobs:
   validate-schemas:
@@ -19,36 +19,46 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Validate JSON Schema definition
         run: |
-          node -e "
-            const schema = require('./schemas/v2.1.0/context-schema.json');
-            const Ajv = require('ajv');
-            const ajv = new Ajv();
-            const validate = ajv.compile(schema);
+          node --input-type=commonjs -e "
+            const schema = require('./schemas/v3.0.0/context-schema.json');
+            const { Ajv } = require('ajv');
+            const addFormats = require('ajv-formats');
+            const ajv = new Ajv({ allErrors: true });
+            addFormats(ajv);
+            ajv.compile(schema);
             console.log('JSON Schema definition is valid');
           "
 
       - name: Validate example schemas
-        run: npm run validate-all
+        run: pnpm run validate-all
 
       - name: Check schema compatibility
-        run: npm run check-compatibility
+        run: pnpm run check-compatibility
+
+      - name: Write validation reports
+        run: |
+          pnpm exec tsx validation/schema-validator.ts schemas/v3.0.0/examples --warnings --json > validation-results.json
+          pnpm exec tsx validation/compatibility-checker.ts schemas/v3.0.0/examples --json > compatibility-report.json
 
       - name: Upload validation results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: validation-results
           path: |
@@ -62,25 +72,28 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run unit tests
-        run: npm test
+        run: pnpm test
 
       - name: Run tests with coverage
-        run: npm run test:coverage
+        run: pnpm run test:coverage
 
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/lcov.info
@@ -93,22 +106,31 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run Oxlint
-        run: npm run lint
+        run: pnpm run lint
+
+      - name: Check formatting
+        run: pnpm run format:check
+
+      - name: Type check
+        run: pnpm run typecheck
 
       - name: Check Markdown formatting
-        run: npm run docs:serve
+        run: pnpm run docs:serve
 
   test-platform-adapters:
     name: Test Platform Adapter Compatibility
@@ -119,25 +141,28 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Test platform compatibility
         run: |
-          node validation/compatibility-checker.js schemas/v2.1.0/examples \
+          pnpm exec tsx validation/compatibility-checker.ts schemas/v3.0.0/examples \
             --platform=${{ matrix.platform }} \
             --json > compatibility-${{ matrix.platform }}.json
 
       - name: Upload platform test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: platform-compatibility-${{ matrix.platform }}
           path: compatibility-${{ matrix.platform }}.json
@@ -146,30 +171,36 @@ jobs:
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
-      - name: Run npm audit
-        run: npm audit --audit-level moderate
+      - name: Run pnpm audit
+        run: pnpm audit --audit-level moderate
 
       - name: Run security scan with njsscan
-        uses: ajinabraham/njsscan-action@v7
+        uses: ajinabraham/njsscan-action@v9
         with:
           args: '--sarif --output results.sarif validation/ || true'
 
       - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
 
@@ -179,10 +210,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Check for broken links
-        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        uses: tcort/github-action-markdown-link-check@v1
         with:
           use-quiet-mode: 'yes'
           use-verbose-mode: 'yes'
@@ -195,8 +226,8 @@ jobs:
             "README.md"
             "SPECIFICATION.md"
             "CONTRIBUTING.md"
-            "docs/platform-support.md"
-            "docs/migration-guide.md"
+            "docs/reference/platform-support.md"
+            "docs/guides/migration-guide.md"
           )
 
           for file in "${required_files[@]}"; do
@@ -216,21 +247,24 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Check package version
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          SCHEMA_VERSION=$(node -p "require('./schemas/v2.1.0/context-schema.json').properties.version.pattern")
+          SCHEMA_VERSION=$(node -p "require('./schemas/v3.0.0/context-schema.json').properties.version.pattern")
           echo "Package version: $PACKAGE_VERSION"
           echo "Schema version pattern: $SCHEMA_VERSION"
 
@@ -242,10 +276,10 @@ jobs:
           fi
 
           # Validate all examples pass validation
-          npm run validate-all
+          pnpm run validate-all
 
           # Check compatibility across all platforms
-          npm run check-compatibility
+          pnpm run check-compatibility
 
           echo "Release readiness check completed"
 
@@ -257,20 +291,23 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build package
-        run: npm run prepare
+        run: pnpm run build
 
       - name: Publish to NPM
         run: npm publish
@@ -282,16 +319,18 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'release:')
     needs: [publish-npm]
+    outputs:
+      version: ${{ steps.package-version.outputs.version }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Extract version from package.json
         id: package-version
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Create Release
         uses: actions/create-release@v1
@@ -330,12 +369,14 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'release:')
     needs: [create-release]
+    env:
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
     steps:
       - name: Notify via webhook
-        if: secrets.DISCORD_WEBHOOK_URL
+        if: env.DISCORD_WEBHOOK_URL != ''
         run: |
           curl -H "Content-Type: application/json" \
             -X POST \
-            -d "{\"content\":\"🚀 New AI Context Schema release: v${{ steps.package-version.outputs.version }} is now available!\"}" \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
+            -d "{\"content\":\"🚀 New AI Context Schema release: v${{ needs.create-release.outputs.version }} is now available!\"}" \
+            "$DISCORD_WEBHOOK_URL"

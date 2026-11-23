@@ -343,7 +343,7 @@ The fragmentation crisis is temporary. Universal standards are inevitable. The q
 
 ---
 
-**AI Context Schema:** <https://github.com/ai-context-schema/ai-context-schema>  
+**AI Context Schema:** <https://github.com/vdkit/ai-context-schema>  
 **Reference Implementation:** <https://vdk.tools>
 
 *The configuration wars are ending. Universal standards are winning. The future is interoperable.*

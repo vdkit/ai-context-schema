@@ -635,10 +635,10 @@ We're launching the solution to the fragmentation problem. Now we need community
 
 ## Resources
 
-- **AI Context Schema Repository:** <https://github.com/ai-context-schema/ai-context-schema>
+- **AI Context Schema Repository:** <https://github.com/vdkit/ai-context-schema>
 - **VDK Reference Implementation:** <https://vdk.tools>  
-- **Example Schemas:** [Browse 20+ working examples](https://github.com/ai-context-schema/ai-context-schema/tree/main/schemas/v2.1.0/examples)
-- **Platform Support Guide:** [Detailed platform documentation](https://github.com/ai-context-schema/ai-context-schema/blob/main/docs/platform-support.md)
+- **Example Schemas:** [Browse 20+ working examples](https://github.com/vdkit/ai-context-schema/tree/main/schemas/v3.0.0/examples)
+- **Platform Support Guide:** [Detailed platform documentation](https://github.com/vdkit/ai-context-schema/blob/main/docs/reference/platform-support.md)
 
 **Questions?** Open an issue in the repository or join the community discussions.
 
