@@ -126,6 +126,9 @@ jobs:
       - name: Check formatting
         run: pnpm run format:check
 
+      - name: Type check
+        run: pnpm run typecheck
+
       - name: Check Markdown formatting
         run: pnpm run docs:serve
 
