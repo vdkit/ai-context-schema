@@ -48,7 +48,7 @@ jobs:
 
       - name: Upload validation results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: validation-results
           path: |
@@ -137,7 +137,7 @@ jobs:
             --json > compatibility-${{ matrix.platform }}.json
 
       - name: Upload platform test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: platform-compatibility-${{ matrix.platform }}
           path: compatibility-${{ matrix.platform }}.json
