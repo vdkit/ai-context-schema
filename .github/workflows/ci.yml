@@ -164,7 +164,7 @@ jobs:
         run: npm audit --audit-level moderate
 
       - name: Run security scan with njsscan
-        uses: ajinabraham/njsscan-action@v7
+        uses: ajinabraham/njsscan-action@v9
         with:
           args: '--sarif --output results.sarif validation/ || true'
 
